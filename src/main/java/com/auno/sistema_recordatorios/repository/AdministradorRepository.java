@@ -1,9 +1,9 @@
 package com.auno.sistema_recordatorios.repository;
 
-import com.auno.sistema_recordatorios.entity.Paciente;
+import com.auno.sistema_recordatorios.entity.Administrador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PacienteRepository extends JpaRepository<Paciente, Long> {
-    }
+public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
+}

@@ -3,24 +3,24 @@ package com.auno.sistema_recordatorios.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "pacientes")
-public class Paciente {
+@Table(name = "administradores")
+public class Administrador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nombre;
 
-    // Relación 1 a 1 con Usuario. CascadeType.ALL permite que al guardar un paciente,
-    // se guarde su usuario automáticamente.
+    // Puedes agregar más campos específicos del administrador aquí
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
-    public Paciente() {
+    public Administrador() {
     }
 
-    public Paciente(String nombre, Usuario usuario) {
+    public Administrador(String nombre, Usuario usuario) {
         this.nombre = nombre;
         this.usuario = usuario;
     }
