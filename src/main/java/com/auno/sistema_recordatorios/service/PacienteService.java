@@ -15,6 +15,10 @@ public class PacienteService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // Agregamos el repositorio de roles
+    @Autowired
+    private RolRepository rolRepository;
+
     // Lógica para registrar un paciente
     public Paciente registrarPaciente(RegistroPacienteDTO dto) {
         // 1. Validar que el email no exista ya
@@ -22,13 +26,19 @@ public class PacienteService {
             throw new RuntimeException("El email ya está registrado");
         }
 
-        // 2. Crear el Usuario con rol "PACIENTE"
-        Usuario nuevoUsuario = new Usuario(dto.getEmail(), dto.getPassword(), "PACIENTE");
+        // 2. Buscar el rol en la base de datos
+        // Nota: Asegúrate de que "ROLE_PACIENTE" exista previamente en la tabla de roles
+        Rol rolPaciente = rolRepository.findByNombre("ROLE_PACIENTE")
+                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
 
-        // 3. Crear el Paciente y asignarle el Usuario
+        // 3. Crear el Usuario usando el constructor de 2 argumentos y agregarle el rol
+        Usuario nuevoUsuario = new Usuario(dto.getEmail(), dto.getPassword());
+        nuevoUsuario.agregarRol(rolPaciente);
+
+        // 4. Crear el Paciente y asignarle el Usuario
         Paciente nuevoPaciente = new Paciente(dto.getNombre(), nuevoUsuario);
 
-        // 4. Guardar en la base de datos (se guardan ambos por el CascadeType.ALL)
+        // 5. Guardar en la base de datos
         return pacienteRepository.save(nuevoPaciente);
     }
 
