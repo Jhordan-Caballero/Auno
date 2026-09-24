@@ -1,6 +1,15 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "pacientes")
@@ -17,19 +26,5 @@ public class Paciente {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
-    public Paciente() {
-    }
 
-    public Paciente(String nombre, Usuario usuario) {
-        this.nombre = nombre;
-        this.usuario = usuario;
-    }
-
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }

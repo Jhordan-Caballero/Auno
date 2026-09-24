@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -37,10 +38,6 @@ public class Usuario {
     )
     private Set<Rol> roles = new HashSet<>();
 
-    public Usuario(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
     // Sirve para agregar rol rapidamente
     public void agregarRol(Rol rol) {
         this.roles.add(rol);

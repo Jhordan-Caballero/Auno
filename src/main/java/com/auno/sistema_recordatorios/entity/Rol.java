@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
 @Table(name = "roles")
 public class Rol {
