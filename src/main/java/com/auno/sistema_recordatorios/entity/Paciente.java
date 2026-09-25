@@ -26,5 +26,8 @@ public class Paciente {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
-
+    public Paciente(String nombre, Usuario usuario) {
+        this.nombre = nombre;
+        this.usuario = usuario;
+    }
 }

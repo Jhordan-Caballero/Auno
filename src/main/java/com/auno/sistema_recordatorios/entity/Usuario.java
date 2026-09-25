@@ -42,4 +42,9 @@ public class Usuario {
     public void agregarRol(Rol rol) {
         this.roles.add(rol);
     }
+
+    public Usuario(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
