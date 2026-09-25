@@ -14,7 +14,7 @@ public class DataSeedConfig {
     public CommandLineRunner initData(RolRepository rolRepository, EspecialidadRepository especialidadRepository) {
         return args -> {
             // 1. Inicializar Roles
-            // Usamos .count() para asegurarnos de no duplicarlos cada vez que reinicias el servidor
+            // Para asegurarnos de no duplicarlos cada vez que reinicias el servidor
             if (rolRepository.count() == 0) {
                 rolRepository.save(new Rol("ROLE_PACIENTE"));
                 rolRepository.save(new Rol("ROLE_ADMIN"));
