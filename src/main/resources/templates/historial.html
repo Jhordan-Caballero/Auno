@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Historial clínico</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            Sistema de Citas
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a th:href="@{/inicio}">
+                    🏠 <span>Inicio</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/mis_citas}">
+                    📅 <span>Mis citas</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/historial}"
+                   class="active">
+
+                    🩺
+                    <span>Historial clínico</span>
+
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    👤 <span>Perfil</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="page-header"
+             style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+             ">
+
+            <div>
+
+                <h1>Historial clínico</h1>
+
+                <p>
+                    Consulta tus antecedentes y consultas médicas
+                </p>
+
+            </div>
+
+            <button class="btn btn-secondary">
+                + Nueva entrada
+            </button>
+
+        </div>
+
+        <div class="history">
+
+            <div
+                    class="history-item"
+                    th:each="entrada : ${historial}">
+
+                <div
+                        class="history-date"
+                        th:text="${#temporals.format(
+                        entrada.fecha,
+                        'dd/MM/yyyy')}">
+
+                    14/04/2026
+
+                </div>
+
+                <div class="history-card">
+
+                    <h3
+                            th:text="${entrada.doctor.nombres + ' ' + entrada.doctor.apellidos}">
+
+                        Dr. Luis Ramírez
+
+                    </h3>
+
+                    <p>
+
+                        <strong>Motivo:</strong>
+
+                        <span th:text="${entrada.motivo}">
+                            Dolor en el pecho
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <strong>Diagnóstico:</strong>
+
+                        <span th:text="${entrada.diagnostico}">
+                            Angina leve
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <strong>Recomendaciones:</strong>
+
+                        <span th:text="${entrada.recomendaciones}">
+                            Reducir estrés y realizar ejercicio moderado.
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

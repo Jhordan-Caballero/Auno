@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mis citas</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/estilos.css}">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            Sistema de Citas
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a th:href="@{/inicio}">
+                    🏠 <span>Inicio</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/mis_citas}"
+                   class="active">
+
+                    📅
+                    <span>Mis citas</span>
+
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/historial}">
+                    🩺 <span>Historial clínico</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    👤 <span>Perfil</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="page-header">
+
+            <h1>Mis citas</h1>
+
+            <p>
+                Consulta tus próximas citas médicas
+            </p>
+
+        </div>
+
+        <div class="appointment-list">
+
+            <div
+                    class="appointment-card"
+                    th:each="cita : ${citas}">
+
+                <div class="appointment-date">
+
+                    <div
+                            class="day"
+                            th:text="${#temporals.format(cita.fecha, 'dd')}">
+
+                        14
+
+                    </div>
+
+                    <div
+                            class="month"
+                            th:text="${#temporals.format(cita.fecha, 'MMM')}">
+
+                        MAY
+
+                    </div>
+
+                </div>
+
+                <div class="appointment-main">
+
+                    <h3
+                            th:text="${cita.doctor.nombres + ' ' + cita.doctor.apellidos}">
+
+                        Dr. Luis Ramírez
+
+                    </h3>
+
+                    <p
+                            th:text="${cita.doctor.especialidad.nombre}">
+
+                        Cardiología
+
+                    </p>
+
+                    <p>
+
+                        🕐
+
+                        <span th:text="${cita.hora}">
+                            11:00 AM
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <span
+                            th:class="'status ' +
+                            (${cita.estado.name() == 'CONFIRMADA'}
+                            ? 'confirmed'
+                            : 'pending')"
+
+                            th:text="${cita.estado}">
+
+                        Confirmada
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div style="margin-top:25px">
+
+            <a
+                    th:href="@{/inicio}"
+                    class="btn btn-primary"
+                    style="display:inline-block;width:auto">
+
+                Nueva cita
+
+            </a>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

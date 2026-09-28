@@ -12,26 +12,26 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-class Cita {
+
+@Entity // <-- Si falta esto, sale el error "Not a managed type"
+@Table(name = "citas")
+public class Cita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación: Muchos pacientes pueden tener muchas citas, pero una cita es de UN paciente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    // Relación: Una cita pertenece a UN doctor
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id", nullable = false)
-    private Doctor doctor;
-
-    @Column(name = "fecha_hora", nullable = false)
-    private LocalDateTime fechaHora;
+    // Relacionamos la cita directamente con el bloque de horario elegido
+    @OneToOne
+    @JoinColumn(name = "horario_id", nullable = false)
+    private Horario horario;
 
     private String motivo;
 
-    // Puede ser "PENDIENTE", "CONFIRMADA", "CANCELADA"
+    // Ej: "CONFIRMADA", "CANCELADA", "ATENDIDA"
     private String estado;
+
 }
