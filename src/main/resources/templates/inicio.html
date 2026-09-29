@@ -3,17 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Citas Médicas</title>
-
-    <link rel="stylesheet"
-          th:href="@{/css/estilos.css}">
-
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 
 <body>
@@ -21,159 +14,145 @@
 <div class="app">
 
     <!-- SIDEBAR -->
-
     <aside class="sidebar">
-
-        <div class="sidebar-logo">
-            Sistema de Citas
-        </div>
-
+        <div class="sidebar-logo">Sistema de Citas</div>
         <ul class="sidebar-menu">
-
-            <li>
-                <a th:href="@{/inicio}"
-                   class="active">
-
-                    🏠
-                    <span>Inicio</span>
-
-                </a>
-            </li>
-
-            <li>
-                <a th:href="@{/mis_citas}">
-
-                    📅
-                    <span>Mis citas</span>
-
-                </a>
-            </li>
-
-            <li>
-                <a th:href="@{/historial}">
-
-                    🩺
-                    <span>Historial clínico</span>
-
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-
-                    👤
-                    <span>Perfil</span>
-
-                </a>
-            </li>
-
+            <li><a th:href="@{/inicio}" class="active">🏠 <span>Inicio</span></a></li>
+            <li><a th:href="@{/mis_citas}">📅 <span>Mis citas</span></a></li>
+            <li><a th:href="@{/historial}">🩺 <span>Historial clínico</span></a></li>
+            <li><a href="#">👤 <span>Perfil</span></a></li>
         </ul>
-
         <div class="logout">
-
-            <a th:href="@{/logout}"
-               class="sidebar-menu a">
-
-                🚪
-                <span>Cerrar sesión</span>
-
-            </a>
-
+            <a th:href="@{/logout}" class="sidebar-menu a">🚪 <span>Cerrar sesión</span></a>
         </div>
-
     </aside>
 
     <!-- CONTENIDO -->
-
     <main class="main">
 
         <div class="page-header">
-
-            <h1>
-                Hola,
-                <span th:text="${paciente.nombre}">
-                    Juan Pérez
-                </span>
-            </h1>
-
-            <p>
-                ¿Qué especialidad necesitas?
-            </p>
-
+            <h1>Hola, <span>Ana Lopez</span></h1>
+            <p>¿Qué especialidad necesitas?</p>
         </div>
 
         <!-- ESPECIALIDADES -->
-
         <div class="specialties">
 
-            <a th:each="especialidad : ${especialidades}"
-               th:href="@{/reservar_cita(especialidad=${especialidad.id})}"
-               class="specialty"
-               style="text-decoration:none;color:inherit;">
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🩺</div>
+                <span>Medicina General</span>
+            </a>
 
-                <div class="specialty-icon">
-                    🩺
-                </div>
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🫀</div>
+                <span>Cardiología</span>
+            </a>
 
-                <span th:text="${especialidad.nombre}">
-                    Cardiología
-                </span>
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🦷</div>
+                <span>Odontología</span>
+            </a>
 
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">👶</div>
+                <span>Pediatría</span>
+            </a>
+
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🧠</div>
+                <span>Neurología</span>
+            </a>
+
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🦴</div>
+                <span>Traumatología</span>
+            </a>
+
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">👁️</div>
+                <span>Oftalmología</span>
+            </a>
+
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🤰</div>
+                <span>Ginecología</span>
+            </a>
+
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🧴</div>
+                <span>Dermatología</span>
+            </a>
+
+            <!-- Nueva especialidad agregada -->
+            <a th:href="@{/reservar_cita}" class="specialty" style="text-decoration:none;color:inherit;">
+                <div class="specialty-icon">🎗️</div>
+                <span>Oncología</span>
             </a>
 
         </div>
 
         <!-- MÉDICOS -->
-
-        <h2 class="section-title">
-            Médicos disponibles
-        </h2>
-
+        <h2 class="section-title">Médicos disponibles</h2>
         <div class="doctor-list">
 
-            <div class="doctor-card"
-                 th:each="doctor : ${doctores}">
-
+            <div class="doctor-card">
                 <div class="doctor-info">
-
-                    <div class="doctor-avatar">
-                        👨‍⚕️
-                    </div>
-
+                    <div class="doctor-avatar">👨‍⚕️</div>
                     <div>
-
-                        <div class="doctor-name"
-                             th:text="${doctor.nombre + ' ' + doctor.apellido}">
-
-                            Dr. Luis Ramírez
-
-                        </div>
-
-                        <div class="doctor-specialty"
-                             th:text="${doctor.especialidad.nombre}">
-
-                            Cardiología
-
-                        </div>
-
+                        <div class="doctor-name">Dr. Carlos Ramirez</div>
+                        <div class="doctor-specialty">Medicina General</div>
                     </div>
-
                 </div>
+                <a th:href="@{/reservar_cita}" class="btn-small">Ver horarios</a>
+            </div>
 
-                <a
-                        th:href="@{/reservar_cita(doctor=${doctor.id})}"
-                        class="btn-small">
+            <div class="doctor-card">
+                <div class="doctor-info">
+                    <div class="doctor-avatar">👩‍⚕️</div>
+                    <div>
+                        <div class="doctor-name">Dra. Elena Suarez</div>
+                        <div class="doctor-specialty">Pediatría</div>
+                    </div>
+                </div>
+                <a th:href="@{/reservar_cita}" class="btn-small">Ver horarios</a>
+            </div>
 
-                    Ver horarios
+            <div class="doctor-card">
+                <div class="doctor-info">
+                    <div class="doctor-avatar">👨‍⚕️</div>
+                    <div>
+                        <div class="doctor-name">Dr. Jorge Castillo</div>
+                        <div class="doctor-specialty">Dermatología</div>
+                    </div>
+                </div>
+                <a th:href="@{/reservar_cita}" class="btn-small">Ver horarios</a>
+            </div>
 
-                </a>
+            <div class="doctor-card">
+                <div class="doctor-info">
+                    <div class="doctor-avatar">👩‍⚕️</div>
+                    <div>
+                        <div class="doctor-name">Dra. Maria Fernandez</div>
+                        <div class="doctor-specialty">Neurología</div>
+                    </div>
+                </div>
+                <a th:href="@{/reservar_cita}" class="btn-small">Ver horarios</a>
+            </div>
 
+            <div class="doctor-card">
+                <div class="doctor-info">
+                    <div class="doctor-avatar">👨‍⚕️</div>
+                    <div>
+                        <div class="doctor-name">Dr. Roberto Salas</div>
+                        <div class="doctor-specialty">Traumatología</div>
+                    </div>
+                </div>
+                <a th:href="@{/reservar_cita}" class="btn-small">Ver horarios</a>
             </div>
 
         </div>
 
     </main>
-
 </div>
 
 </body>

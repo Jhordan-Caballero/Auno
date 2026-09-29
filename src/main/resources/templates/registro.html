@@ -1,185 +1,97 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de paciente</title>
-
-    <link rel="stylesheet"
-          th:href="@{/css/estilos.css}">
-
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- Agregamos un pequeño ajuste por si tu reservation-grid necesita un gap específico aquí -->
+    <style>
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="auth-page">
-
     <div class="auth-card">
-
         <h1>Crear cuenta de paciente</h1>
+        <p class="subtitle">Completa tus datos para registrarte</p>
 
-        <p class="subtitle">
-            Completa tus datos para registrarte
-        </p>
+        <!-- El objeto que respalda el formulario -->
+        <form th:action="@{/api/pacientes/registrar}" th:object="${paciente}" method="post">
 
-        <form th:action="@{/registro}"
-              th:object="${paciente}"
-              method="post">
-
-            <div class="form-group">
-
-                <label>Nombres</label>
-
-                <input
-                        type="text"
-                        th:field="*{nombres}"
-                        class="form-control"
-                        required>
-
+            <!-- Fila 1: Nombres y Apellidos -->
+            <div class="grid-2-cols">
+                <div class="form-group">
+                    <label>Nombres</label>
+                    <input type="text" th:field="*{nombre}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <!-- Usamos name en lugar de th:field para la maqueta visual -->
+                    <input type="text" name="apellidos" class="form-control" required>
+                </div>
             </div>
 
+            <!-- Fila 2: Correo electrónico -->
             <div class="form-group">
-
-                <label>Apellidos</label>
-
-                <input
-                        type="text"
-                        th:field="*{apellidos}"
-                        class="form-control"
-                        required>
-
-            </div>
-
-            <div class="form-group">
-
                 <label>Correo electrónico</label>
-
-                <input
-                        type="email"
-                        th:field="*{correo}"
-                        class="form-control"
-                        required>
-
+                <input type="email" th:field="*{email}" class="form-control" required>
             </div>
 
+            <!-- Fila 3: DNI -->
             <div class="form-group">
-
                 <label>DNI</label>
-
-                <input
-                        type="text"
-                        th:field="*{dni}"
-                        class="form-control"
-                        maxlength="8"
-                        required>
-
+                <input type="text" name="dni" class="form-control" required>
             </div>
 
-            <div class="reservation-grid">
-
+            <!-- Fila 4: Fecha de nacimiento y Género -->
+            <div class="grid-2-cols">
                 <div class="form-group">
-
                     <label>Fecha de nacimiento</label>
-
-                    <input
-                            type="date"
-                            th:field="*{fechaNacimiento}"
-                            class="form-control"
-                            required>
-
+                    <input type="date" name="fechaNacimiento" class="form-control" required>
                 </div>
-
-                <div class="form-group">
-
-                    <label>Género</label>
-
-                    <select
-                            th:field="*{genero}"
-                            class="form-control">
-
-                        <option value="">
-                            Seleccionar
-                        </option>
-
-                        <option value="MASCULINO">
-                            Masculino
-                        </option>
-
-                        <option value="FEMENINO">
-                            Femenino
-                        </option>
-
-                        <option value="OTRO">
-                            Otro
-                        </option>
-
-                    </select>
-
-                </div>
-
+                
             </div>
 
+            <!-- Fila 5: Teléfono -->
             <div class="form-group">
-
                 <label>Teléfono</label>
-
-                <input
-                        type="tel"
-                        th:field="*{telefono}"
-                        class="form-control">
-
+                <input type="tel" name="telefono" class="form-control" required>
             </div>
 
-            <div class="form-group">
-
-                <label>Contraseña</label>
-
-                <input
-                        type="password"
-                        th:field="*{password}"
-                        class="form-control"
-                        required>
-
+            <!-- Fila 6: Contraseña y Confirmar Contraseña -->
+            <div class="grid-2-cols">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" th:field="*{password}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" name="confirmarPassword" class="form-control" required>
+                </div>
             </div>
 
+            <!-- Checkbox y Botón -->
             <div class="form-group">
-
-                <label>
+                <label style="display: flex; align-items: center; gap: 8px;">
                     <input type="checkbox" required>
-
-                    Acepto los
-                    <a href="#">términos y condiciones</a>
+                    <span>Acepto los <a href="#">términos y condiciones</a></span>
                 </label>
-
             </div>
 
-            <button
-                    type="submit"
-                    class="btn btn-primary">
-
-                Registrarme
-
-            </button>
-
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarme</button>
         </form>
 
-        <div class="auth-links">
-
+        <div class="auth-links" style="margin-top: 20px; text-align: center;">
             ¿Ya tienes cuenta?
-
-            <a th:href="@{/login}">
-                Inicia sesión
-            </a>
-
+            <a th:href="@{/login}">Inicia sesión</a>
         </div>
-
     </div>
-
 </div>
 
 </body>

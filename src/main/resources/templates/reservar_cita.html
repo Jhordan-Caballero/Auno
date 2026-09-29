@@ -1,250 +1,97 @@
 <!DOCTYPE html>
-<html lang="es"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservar cita</title>
-
-    <link rel="stylesheet"
-          th:href="@{/css/estilos.css}">
-
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
-
 <body>
-
 <div class="app">
 
     <aside class="sidebar">
-
-        <div class="sidebar-logo">
-            Sistema de Citas
-        </div>
-
+        <div class="sidebar-logo">Sistema de Citas</div>
         <ul class="sidebar-menu">
-
-            <li>
-                <a th:href="@{/inicio}">
-                    🏠 <span>Inicio</span>
-                </a>
-            </li>
-
-            <li>
-                <a th:href="@{/mis_citas}">
-                    📅 <span>Mis citas</span>
-                </a>
-            </li>
-
-            <li>
-                <a th:href="@{/historial}">
-                    🩺 <span>Historial clínico</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    👤 <span>Perfil</span>
-                </a>
-            </li>
-
+            <li><a th:href="@{/inicio}">🏠 <span>Inicio</span></a></li>
+            <li><a th:href="@{/mis-citas}">📅 <span>Mis citas</span></a></li>
+            <li><a th:href="@{/historial}">🩺 <span>Historial clínico</span></a></li>
+            <li><a href="#">👤 <span>Perfil</span></a></li>
         </ul>
-
     </aside>
 
     <main class="main">
-
         <div class="page-header">
-
             <h1>Reserva tu cita</h1>
-
-            <p>
-                Selecciona una fecha y horario disponible
-            </p>
-
+            <p>Selecciona una fecha y horario disponible</p>
         </div>
 
         <div class="reservation-card">
+            <!-- Conectamos el formulario al endpoint de la API y al objeto reserva -->
+            <form th:action="@{/api/citas/reservar}" th:object="${reserva}" method="post">
 
-            <form
-                    th:action="@{/reservar_cita}"
-                    th:object="${cita}"
-                    method="post">
-
-                <input
-                        type="hidden"
-                        th:field="*{doctorId}">
+                <!-- Campo oculto para el ID del paciente -->
+                <input type="hidden" th:field="*{pacienteId}">
 
                 <div class="reservation-grid">
-
                     <!-- CALENDARIO -->
-
                     <div>
-
-                        <h3 class="section-title">
-                            1. Selecciona una fecha
-                        </h3>
-
+                        <h3 class="section-title">1. Selecciona una fecha</h3>
                         <div class="calendar">
-
                             <table>
-
                                 <thead>
-
                                 <tr>
-
-                                    <th>L</th>
-                                    <th>M</th>
-                                    <th>M</th>
-                                    <th>J</th>
-                                    <th>V</th>
-                                    <th>S</th>
-                                    <th>D</th>
-
+                                    <th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th>
                                 </tr>
-
                                 </thead>
-
                                 <tbody>
-
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>4</td>
-                                    <td>5</td>
+                                    <td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
                                 </tr>
-
                                 <tr>
-                                    <td>6</td>
-                                    <td>7</td>
-                                    <td>8</td>
-                                    <td>9</td>
-                                    <td>10</td>
-                                    <td>11</td>
-                                    <td>12</td>
+                                    <td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
                                 </tr>
-
                                 <tr>
-                                    <td>13</td>
-                                    <td class="selected">14</td>
-                                    <td>15</td>
-                                    <td>16</td>
-                                    <td>17</td>
-                                    <td>18</td>
-                                    <td>19</td>
+                                    <td>13</td><td class="selected">14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
                                 </tr>
-
                                 <tr>
-                                    <td>20</td>
-                                    <td>21</td>
-                                    <td>22</td>
-                                    <td>23</td>
-                                    <td>24</td>
-                                    <td>25</td>
-                                    <td>26</td>
+                                    <td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td>
                                 </tr>
-
                                 </tbody>
-
                             </table>
-
                         </div>
 
-                        <input
-                                type="date"
-                                th:field="*{fecha}"
-                                class="form-control"
-                                style="margin-top:15px"
-                                required>
-
+                        <!-- Se quita el th:field para que Thymeleaf no choque, se deja como input normal para la vista -->
+                        <input type="date" name="fechaFiltro" class="form-control" style="margin-top:15px">
                     </div>
 
                     <!-- HORARIOS -->
-
                     <div>
-
-                        <h3 class="section-title">
-                            2. Selecciona un horario
-                        </h3>
-
+                        <h3 class="section-title">2. Selecciona un horario</h3>
                         <div class="hours">
+                            <!-- Iteramos sobre los horarios reales de la base de datos -->
+                            <label class="hour" th:each="horario : ${horarios}">
+                                <!-- El valor a enviar será el ID del horario -->
+                                <input type="radio" th:field="*{horarioId}" th:value="${horario.id}" hidden required>
 
-                            <label class="hour"
-                                   th:each="horario : ${horarios}">
-
-                                <input
-                                        type="radio"
-                                        th:field="*{hora}"
-                                        th:value="${horario}"
-                                        hidden>
-
-                                <span th:text="${horario}">
-                                    09:00 AM
-                                </span>
-
+                                <!-- Mostramos la hora de inicio y fin en el botón -->
+                                <span th:text="${horario.horaInicio + ' - ' + horario.horaFin}">09:00 AM</span>
                             </label>
-
                         </div>
-
                     </div>
-
                 </div>
 
-                <div class="form-group"
-                     style="margin-top:25px">
-
-                    <label>
-                        3. Motivo de consulta
-                    </label>
-
-                    <textarea
-                            th:field="*{motivo}"
-                            class="form-control"
-                            placeholder="Describe brevemente el motivo de tu consulta..."
-                            required>
-                    </textarea>
-
+                <div class="form-group" style="margin-top:25px">
+                    <label>3. Motivo de consulta</label>
+                    <textarea th:field="*{motivo}" class="form-control" placeholder="Describe brevemente el motivo de tu consulta..." required></textarea>
                 </div>
 
-                <div style="
-                    display:flex;
-                    justify-content:flex-end;
-                    gap:10px;
-                    margin-top:20px;">
-
-                    <a
-                            th:href="@{/inicio}"
-                            class="btn btn-secondary">
-
-                        Cancelar
-
-                    </a>
-
-                    <button
-                            type="submit"
-                            class="btn btn-primary"
-                            style="width:auto">
-
-                        Confirmar reserva
-
-                    </button>
-
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                    <a th:href="@{/inicio}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" style="width:auto">Confirmar reserva</button>
                 </div>
-
             </form>
-
         </div>
-
     </main>
-
 </div>
-
 </body>
 </html>

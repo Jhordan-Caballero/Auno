@@ -19,7 +19,7 @@ public class DataSeedConfig {
                 rolRepository.save(new Rol("ROLE_PACIENTE"));
                 rolRepository.save(new Rol("ROLE_ADMIN"));
                 rolRepository.save(new Rol("ROLE_DOCTOR"));
-                System.out.println("✅ Roles base creados exitosamente en la base de datos.");
+                System.out.println("Roles base creados exitosamente en la base de datos.");
             }
 
             // 2. Inicializar Especialidades (Para que el paciente tenga de dónde elegir)
@@ -37,7 +37,7 @@ public class DataSeedConfig {
                 odontologia.setDescripcion("Salud bucal y cuidado dental.");
 
                 especialidadRepository.saveAll(List.of(medicinaGeneral, cardiologia, odontologia));
-                System.out.println("✅ Especialidades base creadas exitosamente.");
+                System.out.println("Especialidades base creadas exitosamente.");
             }
         };
     }
