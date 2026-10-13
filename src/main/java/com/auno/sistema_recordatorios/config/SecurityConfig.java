@@ -3,46 +3,41 @@ package com.auno.sistema_recordatorios.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    // 1. Ya NO necesitas inyectar el UserDetailsService en el constructor.
+    // 2. Ya NO necesitas crear el DaoAuthenticationProvider manualmente.
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/pacientes/**").authenticated()
+                        .requestMatchers("/css/**", "/js/**", "/login", "/registro").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/paciente/**").hasAuthority("ROLE_PATIENT")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(httpBasic -> {});
-
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                );
 
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-
-        UserDetails usuario = User
-                .withUsername("admin")
-                .password(passwordEncoder().encode("123456"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(usuario);
     }
 
     @Bean

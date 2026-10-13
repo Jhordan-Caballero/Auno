@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Horario</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #28a745; padding-bottom: 10px; color: #28a745; }
+        .horario-card { border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-confirmar { background-color: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .nav-menu { margin-bottom: 20px; }
+        .nav-menu a { text-decoration: none; color: #0056b3; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-menu">
+        <a th:href="@{/paciente/reservar}">⬅️ Volver a Médicos</a>
+    </div>
+
+    <h2>⏰ Horarios Disponibles</h2>
+
+    <div th:if="${#lists.isEmpty(horariosDisponibles)}">
+        <p style="color: red;">No hay horarios disponibles para este médico en este momento.</p>
+    </div>
+
+    <div th:each="horario : ${horariosDisponibles}" class="horario-card">
+        <div>
+            <strong th:text="${'Fecha: ' + horario.fecha}"></strong><br>
+            <span th:text="${'Hora: ' + horario.horaInicio + ' - ' + horario.horaFin}"></span>
+        </div>
+
+        <form th:action="@{/paciente/reservar/confirmar}" method="POST">
+            <input type="hidden" name="horarioId" th:value="${horario.id}">
+            <button type="submit" class="btn-confirmar">✅ Reservar Cita</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

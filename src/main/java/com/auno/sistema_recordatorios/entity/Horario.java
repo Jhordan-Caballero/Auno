@@ -16,7 +16,6 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "horarios")
 public class Horario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +29,10 @@ public class Horario {
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin; // Ej: 09:30
 
-    // Ej: "DISPONIBLE", "RESERVADO", "CANCELADO"
+    // Ej: "DISPONIBLE", "RESERVADO"
     @Column(nullable = false)
     private String estado;
 
-    // Relacionamos este bloque de horario con un Doctor específico
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;

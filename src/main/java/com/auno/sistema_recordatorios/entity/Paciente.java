@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -18,16 +20,21 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    // Eliminamos el campo "nombre" de aquí porque ya está en la clase Usuario.
 
-    // Relación 1 a 1 con Usuario. CascadeType.ALL permite que al guardar un paciente,
-    // se guarde su usuario automáticamente.
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    private String direccion;
+
+    // Relación 1 a 1 con Usuario.
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 
     public Paciente(String nombre, Usuario usuario) {
-        this.nombre = nombre;
+
         this.usuario = usuario;
+
     }
 }

@@ -1,54 +1,56 @@
 package com.auno.sistema_recordatorios.service;
 
+import com.auno.sistema_recordatorios.dto.DoctorDTO;
 
-import com.auno.sistema_recordatorios.dto.RegistroDoctorDTO;
-import com.auno.sistema_recordatorios.entity.*;
+import com.auno.sistema_recordatorios.entity.Doctor;
+import com.auno.sistema_recordatorios.entity.Especialidad;
 import com.auno.sistema_recordatorios.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class DoctorService {
-    @Autowired
-    private DoctorRepository doctorRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private RolRepository rolRepository;
-    @Autowired
-    private EspecialidadRepository especialidadRepository;
+public class DoctorService {private final DoctorRepository doctorRepository;
+    private final EspecialidadRepository especialidadRepository;
 
-    public Doctor registrarDoctor(RegistroDoctorDTO dto) {
-        // 1. Validar email
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
-        }
-
-        // 2. Buscar la especialidad
-        Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
-                .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
-
-        // 3. Buscar el rol
-        Rol rolDoctor = rolRepository.findByNombre("ROLE_DOCTOR")
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-
-        // 4. Crear usuario y asignar rol
-        Usuario nuevoUsuario = new Usuario(dto.getEmail(), dto.getPassword());
-        nuevoUsuario.agregarRol(rolDoctor);
-
-        // 5. Crear doctor
-        Doctor nuevoDoctor = new Doctor();
-        nuevoDoctor.setNombre(dto.getNombre());
-        nuevoDoctor.setApellido(dto.getApellido());
-        nuevoDoctor.setEspecialidad(especialidad);
-        nuevoDoctor.setUsuario(nuevoUsuario);
-
-        return doctorRepository.save(nuevoDoctor);
+    // Inyectamos ambos repositorios
+    public DoctorService(DoctorRepository doctorRepository, EspecialidadRepository especialidadRepository) {
+        this.doctorRepository = doctorRepository;
+        this.especialidadRepository = especialidadRepository;
     }
 
-    public List<Doctor> obtenerTodos() {
+    @Transactional
+    public void registrarDoctor(DoctorDTO dto) {
+        // 1. Validaciones de duplicidad
+        if (doctorRepository.existsByNumeroColegiatura(dto.getNumeroColegiatura())) {
+            throw new IllegalArgumentException("Ya existe un doctor registrado con ese número de colegiatura.");
+        }
+        if (doctorRepository.existsByCorreoContacto(dto.getCorreoContacto())) {
+            throw new IllegalArgumentException("El correo de contacto ya está asignado a otro doctor.");
+        }
+
+        // 2. Buscar la especialidad. Si no existe, lanzamos error.
+        Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
+                .orElseThrow(() -> new IllegalArgumentException("La especialidad seleccionada no existe."));
+
+        // 3. Crear y mapear la entidad Doctor
+        Doctor doctor = new Doctor();
+        doctor.setNombres(dto.getNombres());
+        doctor.setApellidos(dto.getApellidos());
+        doctor.setNumeroColegiatura(dto.getNumeroColegiatura());
+        doctor.setDescripcion(dto.getDescripcion());
+        doctor.setCorreoContacto(dto.getCorreoContacto());
+        doctor.setTelefonoContacto(dto.getTelefonoContacto());
+        doctor.setEstado("ACTIVO"); // Todo doctor nace como ACTIVO
+        doctor.setEspecialidad(especialidad); // Vinculamos la relación
+
+        // 4. Guardar
+        doctorRepository.save(doctor);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Doctor> listarTodos() {
         return doctorRepository.findAll();
     }
 }

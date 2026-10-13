@@ -1,59 +1,53 @@
 package com.auno.sistema_recordatorios.service;
 
-import com.auno.sistema_recordatorios.dto.GenerarHorarioDTO;
+
+import com.auno.sistema_recordatorios.dto.HorarioDTO;
 import com.auno.sistema_recordatorios.entity.*;
 import com.auno.sistema_recordatorios.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
-public class HorarioService {
-    @Autowired
-    private HorarioRepository horarioRepository;
+public class HorarioService {private final HorarioRepository horarioRepository;
+    private final DoctorRepository doctorRepository;
 
-    @Autowired
-    private DoctorRepository doctorRepository; // Asegúrate de tener esta interfaz en tus repositories
+    public HorarioService(HorarioRepository horarioRepository, DoctorRepository doctorRepository) {
+        this.horarioRepository = horarioRepository;
+        this.doctorRepository = doctorRepository;
+    }
 
-    public List<Horario> generarHorariosAutomaticos(GenerarHorarioDTO dto) {
-        // 1. Buscar al doctor en la base de datos
-        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor no encontrado con el ID: " + dto.getDoctorId()));
-
-        List<Horario> nuevosHorarios = new ArrayList<>();
-
-        // 2. Bucle principal: Recorrer desde la fecha de inicio hasta la fecha de fin
-        for (LocalDate fecha = dto.getFechaInicio(); !fecha.isAfter(dto.getFechaFin()); fecha = fecha.plusDays(1)) {
-
-            // Opcional: Omitir sábados (6) y domingos (7)
-            if (fecha.getDayOfWeek().getValue() >= 6) {
-                continue;
-            }
-
-            // 3. Bucle interno: Crear turnos desde las 08:00 hasta las 16:00
-            LocalTime horaActual = LocalTime.of(8, 0); // 8:00 AM
-            LocalTime horaFinJornada = LocalTime.of(16, 0); // 4:00 PM
-
-            while (horaActual.isBefore(horaFinJornada)) {
-                Horario horario = new Horario();
-                horario.setFecha(fecha);
-                horario.setHoraInicio(horaActual);
-                horario.setHoraFin(horaActual.plusMinutes(30)); // Citas de 30 minutos
-                horario.setEstado("DISPONIBLE");
-                horario.setDoctor(doctor);
-
-                nuevosHorarios.add(horario);
-
-                // Avanzar el reloj 30 minutos para el siguiente bloque
-                horaActual = horaActual.plusMinutes(30);
-            }
+    @Transactional
+    public void registrarHorario(HorarioDTO dto) {
+        // 1. Validar lógica de horas
+        if (dto.getHoraInicio().isAfter(dto.getHoraFin()) || dto.getHoraInicio().equals(dto.getHoraFin())) {
+            throw new IllegalArgumentException("La hora de inicio debe ser estrictamente anterior a la hora de fin.");
         }
 
-        // 4. Guardar todos los bloques generados en un solo movimiento a la base de datos
-        return horarioRepository.saveAll(nuevosHorarios);
+        // 2. Validar duplicidad
+        if (horarioRepository.existsByDoctorIdAndFechaAndHoraInicio(dto.getDoctorId(), dto.getFecha(), dto.getHoraInicio())) {
+            throw new IllegalArgumentException("El doctor ya tiene un turno registrado en esa fecha y hora exacta.");
+        }
+
+        // 3. Buscar al doctor
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new IllegalArgumentException("El médico seleccionado no existe en el sistema."));
+
+        // 4. Crear y guardar
+        Horario horario = new Horario();
+        horario.setDoctor(doctor);
+        horario.setFecha(dto.getFecha());
+        horario.setHoraInicio(dto.getHoraInicio());
+        horario.setHoraFin(dto.getHoraFin());
+        horario.setEstado("DISPONIBLE"); // Se crea listo para ser reservado
+
+        horarioRepository.save(horario);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Horario> listarTodos() {
+        return horarioRepository.findAll();
     }
 }

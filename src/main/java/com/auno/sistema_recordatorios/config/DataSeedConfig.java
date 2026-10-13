@@ -5,39 +5,40 @@ import com.auno.sistema_recordatorios.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 
 @Configuration
 public class DataSeedConfig {
     @Bean
-    public CommandLineRunner initData(RolRepository rolRepository, EspecialidadRepository especialidadRepository) {
+    public CommandLineRunner initData(UsuarioRepository usuarioRepository,
+                                      RolRepository rolRepository,
+                                      PasswordEncoder passwordEncoder) {
         return args -> {
-            // 1. Inicializar Roles
-            // Para asegurarnos de no duplicarlos cada vez que reinicias el servidor
-            if (rolRepository.count() == 0) {
-                rolRepository.save(new Rol("ROLE_PACIENTE"));
-                rolRepository.save(new Rol("ROLE_ADMIN"));
-                rolRepository.save(new Rol("ROLE_DOCTOR"));
-                System.out.println("Roles base creados exitosamente en la base de datos.");
-            }
+            // 1. Verificamos si el rol ADMIN existe, si no, lo creamos
+            Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
+                    .orElseGet(() -> rolRepository.save(new Rol("ROLE_ADMIN")));
 
-            // 2. Inicializar Especialidades (Para que el paciente tenga de dónde elegir)
-            if (especialidadRepository.count() == 0) {
-                Especialidad medicinaGeneral = new Especialidad();
-                medicinaGeneral.setNombre("Medicina General");
-                medicinaGeneral.setDescripcion("Atención primaria y prevención.");
+            // 2. Verificamos si ya existe el usuario administrador
+            if (!usuarioRepository.existsByEmail("admin@sistema.com")) {
+                Usuario admin = new Usuario();
+                admin.setNombres("Administrador");
+                admin.setApellidos("Principal");
+                admin.setEmail("admin@sistema.com");
+                // Encriptamos la contraseña "admin123"
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setTelefono("000000000");
+                admin.setEstado("ACTIVO");
 
-                Especialidad cardiologia = new Especialidad();
-                cardiologia.setNombre("Cardiología");
-                cardiologia.setDescripcion("Especialista en el corazón y sistema circulatorio.");
+                // Le asignamos el rol de administrador
+                admin.agregarRol(rolAdmin);
 
-                Especialidad odontologia = new Especialidad();
-                odontologia.setNombre("Odontología");
-                odontologia.setDescripcion("Salud bucal y cuidado dental.");
+                // Lo guardamos en la base de datos
+                usuarioRepository.save(admin);
 
-                especialidadRepository.saveAll(List.of(medicinaGeneral, cardiologia, odontologia));
-                System.out.println("Especialidades base creadas exitosamente.");
+                System.out.println("✅ Administrador por defecto creado exitosamente:");
+                System.out.println("   Correo: admin@sistema.com");
+                System.out.println("   Clave: admin123");
             }
         };
     }

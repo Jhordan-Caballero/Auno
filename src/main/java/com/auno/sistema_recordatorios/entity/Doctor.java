@@ -13,21 +13,36 @@ import lombok.Setter;
 @Entity
 @Table(name = "doctores")
 public class Doctor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    // Al quitarle la relación con Usuario, el Doctor necesita sus propios datos
+    @Column(nullable = false)
+    private String nombres;
 
-    private String apellido;
+    @Column(nullable = false)
+    private String apellidos;
 
-    // Relación: Muchos doctores pueden tener la misma especialidad
+    @Column(name = "numero_colegiatura", unique = true)
+    private String numeroColegiatura;
+
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
+    @Column(name = "correo_contacto")
+    private String correoContacto;
+
+    @Column(name = "telefono_contacto")
+    private String telefonoContacto;
+
+    // Ej: "ACTIVO", "INACTIVO" (Para saber si puede recibir citas)
+    @Column(nullable = false)
+    private String estado;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
-    private Usuario usuario;
+    // ELIMINADA la relación @OneToOne con Usuario.
 }

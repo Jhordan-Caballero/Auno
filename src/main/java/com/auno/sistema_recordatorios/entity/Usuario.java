@@ -18,10 +18,16 @@ import java.util.Set;
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Agregamos los datos personales aquí para que apliquen a Pacientes y Admins
+    @Column(nullable = false)
+    private String nombres;
+
+    @Column(nullable = false)
+    private String apellidos;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -29,7 +35,11 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    // Nueva relación con la clase Rol
+    private String telefono;
+
+    // Ej: "ACTIVO", "INACTIVO"
+    private String estado;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_roles",
@@ -38,13 +48,7 @@ public class Usuario {
     )
     private Set<Rol> roles = new HashSet<>();
 
-    // Sirve para agregar rol rapidamente
     public void agregarRol(Rol rol) {
         this.roles.add(rol);
-    }
-
-    public Usuario(String email, String password) {
-        this.email = email;
-        this.password = password;
     }
 }

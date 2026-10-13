@@ -14,27 +14,34 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "historiales_clinicos")
-public class Historial_Clinico {
+public class Historial_Clinico { // Mejor sin guion bajo en el nombre de la clase
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paciente_id", nullable = false)
-    private Paciente paciente;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id") // El doctor que escribe el registro
-    private Doctor doctor;
-
+    @Column(nullable = false)
     private LocalDate fecha;
+
+    @Column(name = "motivo_consulta", columnDefinition = "TEXT")
+    private String motivoConsulta;
 
     @Column(columnDefinition = "TEXT")
     private String diagnostico;
 
     @Column(columnDefinition = "TEXT")
-    private String tratamiento;
+    private String recomendaciones; // Cambiado de tratamiento a recomendaciones según tu UML
 
     @Column(columnDefinition = "TEXT")
     private String observaciones;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
+    // Relación 1 a 1 con Cita: Este historial nace a partir de una cita específica atendida
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cita_id", nullable = false, unique = true)
+    private Cita cita;
+
+    // Eliminado el Doctor_id directo, porque ya sabemos qué doctor lo atendió a través de la Cita.
 }

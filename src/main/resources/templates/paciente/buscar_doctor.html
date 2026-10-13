@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservar Cita - Paciente</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #0056b3; padding-bottom: 10px; color: #0056b3; }
+        .filtro-box { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        select { padding: 8px; width: 60%; }
+        button { padding: 9px 15px; background-color: #0056b3; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        .doctor-card { border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .doctor-info h4 { margin: 0 0 5px 0; color: #333; }
+        .doctor-info p { margin: 0; color: #666; font-size: 0.9em; }
+        .btn-reservar { background-color: #28a745; text-decoration: none; color: white; padding: 8px 15px; border-radius: 4px; font-weight: bold; }
+        .nav-menu { margin-bottom: 20px; text-align: right; }
+        .nav-menu a { text-decoration: none; color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-menu">
+        <a th:href="@{/logout}">🚪 Cerrar Sesión</a>
+    </div>
+    <div th:if="${param.reservaExito}" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        ¡Cita reservada exitosamente!
+    </div>
+    <h2>📅 Buscar Médico para tu Cita</h2>
+
+    <!-- Filtro por Especialidad -->
+    <div class="filtro-box">
+        <form th:action="@{/paciente/reservar}" method="GET">
+            <label><strong>Filtrar por Especialidad:</strong></label>
+            <select name="especialidadId">
+                <option value="">-- Ver Todas las Especialidades --</option>
+                <option th:each="esp : ${listaEspecialidades}"
+                        th:value="${esp.id}"
+                        th:text="${esp.nombre}"
+                        th:selected="${esp.id == especialidadSeleccionada}">
+                </option>
+            </select>
+            <button type="submit">🔍 Buscar</button>
+        </form>
+    </div>
+
+    <!-- Lista de Doctores -->
+    <h3>Médicos Disponibles</h3>
+    <div th:if="${#lists.isEmpty(listaDoctores)}">
+        <p style="color: red;">No hay médicos registrados en esta especialidad.</p>
+    </div>
+
+    <div th:each="doc : ${listaDoctores}" class="doctor-card">
+        <div class="doctor-info">
+            <h4 th:text="${'Dr/a. ' + doc.nombres + ' ' + doc.apellidos}"></h4>
+            <p th:text="${'Especialidad: ' + doc.especialidad.nombre}"></p>
+            <p th:text="${'Nro. Colegiatura: ' + doc.numeroColegiatura}"></p>
+        </div>
+        <div>
+            <!-- Al hacer clic, envía el ID del doctor al PASO 2 -->
+            <a th:href="@{/paciente/reservar/horarios(doctorId=${doc.id})}" class="btn-reservar">
+                Ver Horarios ➡️
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

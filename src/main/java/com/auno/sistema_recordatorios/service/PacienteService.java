@@ -3,47 +3,57 @@ package com.auno.sistema_recordatorios.service;
 import com.auno.sistema_recordatorios.dto.RegistroPacienteDTO;
 import com.auno.sistema_recordatorios.entity.*;
 import com.auno.sistema_recordatorios.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PacienteService {
-    @Autowired
-    private PacienteRepository pacienteRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final PacienteRepository pacienteRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    // Agregamos el repositorio de roles
-    @Autowired
-    private RolRepository rolRepository;
-
-    // Lógica para registrar un paciente
-    public Paciente registrarPaciente(RegistroPacienteDTO dto) {
-        // 1. Validar que el email no exista ya
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
-        }
-
-        // 2. Buscar el rol en la base de datos
-        // Nota: Asegúrate de que "ROLE_PACIENTE" exista previamente en la tabla de roles
-        Rol rolPaciente = rolRepository.findByNombre("ROLE_PACIENTE")
-                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado."));
-
-        // 3. Crear el Usuario usando el constructor de 2 argumentos y agregarle el rol
-        Usuario nuevoUsuario = new Usuario(dto.getEmail(), dto.getPassword());
-        nuevoUsuario.agregarRol(rolPaciente);
-
-        // 4. Crear el Paciente y asignarle el Usuario
-        Paciente nuevoPaciente = new Paciente(dto.getNombre(), nuevoUsuario);
-
-        // 5. Guardar en la base de datos
-        return pacienteRepository.save(nuevoPaciente);
+    public PacienteService(PacienteRepository pacienteRepository,
+                           UsuarioRepository usuarioRepository,
+                           RolRepository rolRepository,
+                           PasswordEncoder passwordEncoder) {
+        this.pacienteRepository = pacienteRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.rolRepository = rolRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Lógica para obtener todos los pacientes
-    public List<Paciente> obtenerTodos() {
-        return pacienteRepository.findAll();
+    @Transactional
+    public void registrarPaciente(RegistroPacienteDTO dto) {
+        // 1. Validar que el correo no esté en uso
+        if (usuarioRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("El correo ya está registrado en el sistema");
+        }
+
+        // 2. Obtener el rol de paciente (si no existe, lo creamos dinámicamente para evitar errores)
+        Rol rolPaciente = rolRepository.findByNombre("ROLE_PATIENT")
+                .orElseGet(() -> rolRepository.save(new Rol("ROLE_PATIENT")));
+
+        // 3. Mapear datos al Usuario y encriptar contraseña
+        Usuario usuario = new Usuario();
+        usuario.setNombres(dto.getNombres());
+        usuario.setApellidos(dto.getApellidos());
+        usuario.setEmail(dto.getEmail());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setEstado("ACTIVO");
+        usuario.agregarRol(rolPaciente);
+
+        // 4. Mapear datos al Paciente y vincular el Usuario
+        Paciente paciente = new Paciente();
+        paciente.setFechaNacimiento(dto.getFechaNacimiento());
+        paciente.setDireccion(dto.getDireccion());
+        paciente.setUsuario(usuario);
+
+        // 5. Guardar en base de datos.
+        // Como Paciente tiene CascadeType.ALL sobre Usuario, al guardar el paciente se inserta el usuario automáticamente.
+        pacienteRepository.save(paciente);
     }
 }

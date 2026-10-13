@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Atención Médica</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #28a745; padding-bottom: 10px; color: #28a745; }
+        .info-paciente { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        textarea, input[type="text"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 4px; width: 100%; font-weight: bold; }
+        .error-text { color: red; font-size: 0.9em; }
+        .nav-menu { margin-bottom: 20px; }
+        .nav-menu a { text-decoration: none; color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-menu">
+        <a th:href="@{/admin/citas}">⬅️ Cancelar y volver a la lista</a>
+    </div>
+
+    <h2>🩺 Registrar Historial Clínico</h2>
+
+    <div class="info-paciente">
+        <strong>Paciente:</strong> <span th:text="${cita.paciente.usuario.nombres + ' ' + cita.paciente.usuario.apellidos}"></span><br>
+        <strong>Doctor Asignado:</strong> <span th:text="${'Dr. ' + cita.doctor.nombres + ' ' + cita.doctor.apellidos}"></span><br>
+        <strong>Fecha de la Cita:</strong> <span th:text="${cita.horario.fecha}"></span>
+    </div>
+
+    <form th:action="@{/admin/citas/atender}" th:object="${historialDTO}" method="POST" novalidate>
+
+        <!-- ID de la cita oculto -->
+        <input type="hidden" th:field="*{citaId}">
+
+        <div class="form-group">
+            <label>Motivo de Consulta:</label>
+            <input type="text" th:field="*{motivoConsulta}" placeholder="Ej. Dolor de cabeza frecuente">
+            <span class="error-text" th:if="${#fields.hasErrors('motivoConsulta')}" th:errors="*{motivoConsulta}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Diagnóstico:</label>
+            <textarea th:field="*{diagnostico}" rows="3" placeholder="Detalle el diagnóstico médico..."></textarea>
+            <span class="error-text" th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Recomendaciones (Tratamiento/Receta):</label>
+            <textarea th:field="*{recomendaciones}" rows="3" placeholder="Medicamentos, reposo, terapias..."></textarea>
+            <span class="error-text" th:if="${#fields.hasErrors('recomendaciones')}" th:errors="*{recomendaciones}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Observaciones Adicionales (Opcional):</label>
+            <textarea th:field="*{observaciones}" rows="2"></textarea>
+        </div>
+
+        <button type="submit">Guardar Historial y Finalizar Cita</button>
+    </form>
+</div>
+
+</body>
+</html>

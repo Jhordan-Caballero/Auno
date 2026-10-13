@@ -15,7 +15,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "roles")
 public class Rol {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +22,6 @@ public class Rol {
     @Column(unique = true, nullable = false)
     private String nombre;
 
-    // Constructor manual de 1 parámetro para usar en DataSeedConfig
     public Rol(String nombre) {
         this.nombre = nombre;
     }

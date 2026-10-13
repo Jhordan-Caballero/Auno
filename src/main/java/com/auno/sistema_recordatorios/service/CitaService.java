@@ -1,47 +1,85 @@
 package com.auno.sistema_recordatorios.service;
 
-import com.auno.sistema_recordatorios.dto.ReservaCitaDTO;
 import com.auno.sistema_recordatorios.entity.*;
 import com.auno.sistema_recordatorios.repository.*;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CitaService {
-    @Autowired
-    private CitaRepository citaRepository;
-    @Autowired
-    private PacienteRepository pacienteRepository;
-    @Autowired
-    private HorarioRepository horarioRepository;
+
+    private final CitaRepository citaRepository;
+    private final HorarioRepository horarioRepository;
+    private final PacienteRepository pacienteRepository;
+
+    public CitaService(CitaRepository citaRepository, HorarioRepository horarioRepository, PacienteRepository pacienteRepository) {
+        this.citaRepository = citaRepository;
+        this.horarioRepository = horarioRepository;
+        this.pacienteRepository = pacienteRepository;
+    }
 
     @Transactional
-    public Cita reservarCita(ReservaCitaDTO dto) {
-        // 1. Validar que el paciente exista
-        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
-                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+    public void registrarCita(Long horarioId, String emailPaciente) {
+        // 1. Buscar al paciente logueado
+        Paciente paciente = pacienteRepository.findByUsuarioEmail(emailPaciente)
+                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
 
-        // 2. Validar que el horario exista
-        Horario horario = horarioRepository.findById(dto.getHorarioId())
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
+        // 2. Buscar el horario y verificar que siga disponible
+        Horario horario = horarioRepository.findById(horarioId)
+                .orElseThrow(() -> new IllegalArgumentException("Horario no encontrado"));
 
-        // 3. Validar que el horario esté disponible
-        if (!horario.getEstado().equals("DISPONIBLE")) {
-            throw new RuntimeException("Este horario ya no está disponible");
+        if (!"DISPONIBLE".equals(horario.getEstado())) {
+            throw new IllegalStateException("El horario ya no está disponible.");
         }
 
-        // 4. Cambiar el estado del horario para que nadie más lo tome
+        // 3. Crear la Cita (con los campos correctos basados en tu entidad)
+        Cita cita = new Cita();
+        cita.setPaciente(paciente);
+        cita.setDoctor(horario.getDoctor()); // Añadimos el doctor sacándolo del horario
+        cita.setHorario(horario);
+        cita.setFechaReserva(LocalDateTime.now()); // Corregido: fechaReserva en lugar de fechaRegistro
+        cita.setEstado("PENDIENTE"); // O "PROGRAMADA", el que prefieras como estado inicial
+
+        // 4. Cambiar el estado del horario a RESERVADO
         horario.setEstado("RESERVADO");
+
+        // 5. Guardar los cambios
         horarioRepository.save(horario);
+        citaRepository.save(cita);
+    }
 
-        // 5. Crear la cita
-        Cita nuevaCita = new Cita();
-        nuevaCita.setPaciente(paciente);
-        nuevaCita.setHorario(horario);
-        nuevaCita.setMotivo(dto.getMotivo());
-        nuevaCita.setEstado("CONFIRMADA");
+    @Transactional(readOnly = true)
+    public List<Cita> obtenerHistorialPaciente(String emailPaciente) {
+        return citaRepository.findByPacienteUsuarioEmailOrderByHorarioFechaDesc(emailPaciente);
+    }
 
-        return citaRepository.save(nuevaCita);
+    @Transactional
+    public void cancelarCita(Long citaId, String emailPaciente) {
+        Cita cita = citaRepository.findById(citaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+
+        // 1. Seguridad: Verificar que el paciente logueado sea el dueño de la cita
+        if (!cita.getPaciente().getUsuario().getEmail().equals(emailPaciente)) {
+            throw new SecurityException("No tienes permiso para cancelar esta cita.");
+        }
+
+        // 2. Verificar que la cita esté en un estado cancelable
+        if ("CANCELADA".equals(cita.getEstado()) || "ATENDIDA".equals(cita.getEstado())) {
+            throw new IllegalStateException("Esta cita ya fue cancelada o atendida.");
+        }
+
+        // 3. Cancelar la cita
+        cita.setEstado("CANCELADA");
+
+        // 4. ¡MUY IMPORTANTE! Liberar el horario para que otro paciente lo pueda tomar
+        Horario horario = cita.getHorario();
+        horario.setEstado("DISPONIBLE");
+
+        // 5. Guardar los cambios
+        horarioRepository.save(horario);
+        citaRepository.save(cita);
     }
 }
