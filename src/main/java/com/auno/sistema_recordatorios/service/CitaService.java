@@ -14,11 +14,13 @@ public class CitaService {
     private final CitaRepository citaRepository;
     private final HorarioRepository horarioRepository;
     private final PacienteRepository pacienteRepository;
+    private final EmailService emailService;
 
-    public CitaService(CitaRepository citaRepository, HorarioRepository horarioRepository, PacienteRepository pacienteRepository) {
+    public CitaService(CitaRepository citaRepository, HorarioRepository horarioRepository, PacienteRepository pacienteRepository, EmailService emailService) {
         this.citaRepository = citaRepository;
         this.horarioRepository = horarioRepository;
         this.pacienteRepository = pacienteRepository;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -49,6 +51,16 @@ public class CitaService {
         // 5. Guardar los cambios
         horarioRepository.save(horario);
         citaRepository.save(cita);
+
+        try {
+            emailService.enviarCorreoConfirmacionCita(
+                    emailPaciente,
+                    paciente.getUsuario().getNombres(),
+                    cita
+            );
+        } catch (Exception e) {
+            System.err.println("Error al enviar el correo de confirmación: " + e.getMessage());
+        }
     }
 
     @Transactional(readOnly = true)

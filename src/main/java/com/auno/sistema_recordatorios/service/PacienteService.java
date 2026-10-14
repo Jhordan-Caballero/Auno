@@ -14,15 +14,17 @@ public class PacienteService {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     public PacienteService(PacienteRepository pacienteRepository,
                            UsuarioRepository usuarioRepository,
                            RolRepository rolRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, EmailService emailService) {
         this.pacienteRepository = pacienteRepository;
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -55,5 +57,12 @@ public class PacienteService {
         // 5. Guardar en base de datos.
         // Como Paciente tiene CascadeType.ALL sobre Usuario, al guardar el paciente se inserta el usuario automáticamente.
         pacienteRepository.save(paciente);
+
+        try {
+            emailService.enviarCorreoBienvenida(dto.getEmail(), dto.getNombres());
+        } catch (Exception e) {
+            System.err.println("Error al enviar el correo de bienvenida: " + e.getMessage());
+        }
     }
+
 }
