@@ -24,14 +24,14 @@ El sistema está dividido en dos flujos de trabajo principales, además de un po
 
 ### Backend
 * **Java 17+**
-* **Spring Boot 3.x** (Core, Web)
+* **Spring Boot 4.x** (Core, Web)
 * **Spring Security:** Autenticación, encriptación de contraseñas y autorización estricta basada en roles (ROLE_ADMIN, ROLE_PACIENTE).
 * **Spring Data JPA:** Mapeo objeto-relacional (ORM) e interacción con la base de datos.
 * **PostgreSQL:** Motor de base de datos relacional.
 
 ### Frontend
 * **Thymeleaf:** Motor de plantillas del lado del servidor para renderizado dinámico.
-* **HTML5 & CSS3:** Arquitectura de estilos centralizada y diseño basado en tarjetas (Cards UI) sin dependencias de frameworks externos pesados.
+* **HTML & CSS:** Arquitectura de estilos centralizada y diseño basado en tarjetas (Cards UI) sin dependencias de frameworks externos pesados.
 * **Inter Font:** Tipografía moderna y altamente legible optimizada para interfaces de usuario.
 
 ## Requisitos del Sistema
@@ -41,9 +41,4 @@ Para ejecutar este proyecto en un entorno local, es necesario contar con:
 * Apache Maven.
 * Servidor PostgreSQL instalado y en ejecución.
 
-## Instalación y Configuración
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/tu-usuario/clinica-auno.git](https://github.com/tu-usuario/clinica-auno.git)
-   cd clinica-auno
