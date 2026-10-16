@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class EspecialidadDTO {
 
-    private Long id; // Útil para cuando implementes la edición
+    private Long id;
 
     @NotBlank(message = "El nombre de la especialidad es obligatorio")
     private String nombre;

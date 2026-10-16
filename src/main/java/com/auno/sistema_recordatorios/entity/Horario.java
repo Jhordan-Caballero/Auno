@@ -21,15 +21,14 @@ public class Horario {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate fecha; // Ej: 2026-10-15
+    private LocalDate fecha;
 
     @Column(name = "hora_inicio", nullable = false)
-    private LocalTime horaInicio; // Ej: 09:00
+    private LocalTime horaInicio;
 
     @Column(name = "hora_fin", nullable = false)
-    private LocalTime horaFin; // Ej: 09:30
+    private LocalTime horaFin;
 
-    // Ej: "DISPONIBLE", "RESERVADO"
     @Column(nullable = false)
     private String estado;
 

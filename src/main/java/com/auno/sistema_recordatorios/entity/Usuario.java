@@ -22,7 +22,6 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Agregamos los datos personales aquí para que apliquen a Pacientes y Admins
     @Column(nullable = false)
     private String nombres;
 

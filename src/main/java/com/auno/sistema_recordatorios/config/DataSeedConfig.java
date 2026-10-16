@@ -15,11 +15,11 @@ public class DataSeedConfig {
                                       RolRepository rolRepository,
                                       PasswordEncoder passwordEncoder) {
         return args -> {
-            // 1. Verificamos si el rol ADMIN existe, si no, lo creamos
+            // Rol admin para encontrar o crear
             Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
                     .orElseGet(() -> rolRepository.save(new Rol("ROLE_ADMIN")));
 
-            // 2. Verificamos si ya existe el usuario administrador
+            // Buscar al admin llamado "administrador"
             if (!usuarioRepository.existsByEmail("admin@sistema.com")) {
                 Usuario admin = new Usuario();
                 admin.setNombres("Administrador");
@@ -36,8 +36,8 @@ public class DataSeedConfig {
                 // Lo guardamos en la base de datos
                 usuarioRepository.save(admin);
 
-                System.out.println("✅ Administrador por defecto creado exitosamente:");
-                System.out.println("   Correo: admin@sistema.com");
+                System.out.println(" Administrador:");
+                System.out.println(" Correo: admin@sistema.com");
                 System.out.println("   Clave: admin123");
             }
         };

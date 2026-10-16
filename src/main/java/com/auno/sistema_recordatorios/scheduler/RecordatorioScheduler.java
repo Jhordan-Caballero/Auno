@@ -28,14 +28,14 @@ public class RecordatorioScheduler {
         this.emailService = emailService;
     }
 
-    // FUNCIÓN 1: Se ejecuta SOLAMENTE UNA VEZ justo cuando el servidor termina de arrancar
+    // Se ejecuta justo cuando el servidor termina de arrancar solo una vez
     @EventListener(ApplicationReadyEvent.class)
     @Transactional(readOnly = true)
     public void enviarRecordatoriosAlIniciar() {
-        System.out.println("⏳ Ejecutando revisión de recordatorios al arrancar el sistema...");
+        System.out.println("revisión de recordatorios al arrancar el sistema");
         LocalDate manana = LocalDate.now().plusDays(1);
 
-        List<Cita> citasManana = citaRepository.findByHorarioFechaAndEstado(manana, "PENDIENTE");
+        List<Cita> citasManana = citaRepository.findByHorarioFechaAndEstado(manana, "pendiente");
 
         for (Cita cita : citasManana) {
             String destinatario = cita.getPaciente().getUsuario().getEmail();
@@ -46,35 +46,35 @@ public class RecordatorioScheduler {
                     cita.getDoctor().getApellidos()
             );
             emailService.enviarCorreo(destinatario, "Recordatorio de Cita - Auno", mensaje);
-            System.out.println("✅ Correo de recordatorio enviado a: " + destinatario);
+            System.out.println("Correo de recordatorio enviado a: " + destinatario);
         }
     }
 
-    // FUNCIÓN 2: Se ejecuta de fondo CADA 60 SEGUNDOS (60000 milisegundos)
-    @Scheduled(fixedRate = 60000)
+    // Se ejecuta de fondo cada 10 minutos
+    @Scheduled(fixedRate = 300000)
     @Transactional
     public void limpiarCitasVencidas() {
         LocalDate hoy = LocalDate.now();
         LocalTime ahora = LocalTime.now();
 
-        // Busca citas PENDIENTES cuya fecha es hoy o antes, y cuya hora ya pasó
+        // Busca citas pendientes cuya fecha es hoy o antes
         List<Cita> citasVencidas = citaRepository.findByEstadoAndHorarioFechaLessThanEqualAndHorarioHoraInicioLessThan(
-                "PENDIENTE", hoy, ahora);
+                "pendiente", hoy, ahora);
 
         if (!citasVencidas.isEmpty()) {
-            System.out.println("🧹 Limpiando " + citasVencidas.size() + " citas vencidas...");
+            System.out.println("Limpiando " + citasVencidas.size() + " citas vencidas...");
 
             for (Cita cita : citasVencidas) {
                 // Cambiar estado de la cita
-                cita.setEstado("NO ASISTIÓ");
+                cita.setEstado("No asistio");
 
                 // Liberar el horario
                 Horario horario = cita.getHorario();
-                horario.setEstado("DISPONIBLE");
+                horario.setEstado("disponible");
 
                 horarioRepository.save(horario);
                 citaRepository.save(cita);
-                System.out.println("🚫 Cita ID " + cita.getId() + " marcada como NO ASISTIÓ y horario liberado.");
+                System.out.println("Cita ID " + cita.getId() + " marcada como no asistio y horario liberado.");
             }
         }
     }

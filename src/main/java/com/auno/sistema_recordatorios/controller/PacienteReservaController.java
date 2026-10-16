@@ -36,7 +36,7 @@ public class PacienteReservaController {
         this.citaService = citaService;
     }
 
-    // PASO 1: Mostrar buscador (Especialidades y Doctores)
+    // Muestra buscador (Especialidades y Doctores)
     @GetMapping
     public String mostrarBuscador(
             @RequestParam(value = "especialidadId", required = false) Long especialidadId,
@@ -47,24 +47,24 @@ public class PacienteReservaController {
 
         List<Doctor> doctoresDisponibles;
         if (especialidadId != null) {
-            // Si el paciente filtró por especialidad, usamos Java Streams para filtrar la lista
+            // Si el paciente filtró por especialidad, usamos Java "Streams" para filtrar la lista
             doctoresDisponibles = doctorService.listarTodos().stream()
                     .filter(d -> d.getEspecialidad().getId().equals(especialidadId))
                     .collect(Collectors.toList());
             model.addAttribute("especialidadSeleccionada", especialidadId);
         } else {
-            // Si no hay filtro, mostramos todos
+            // Mostramos todos
             doctoresDisponibles = doctorService.listarTodos();
         }
 
         model.addAttribute("listaDoctores", doctoresDisponibles);
-        return "paciente/buscar_doctor"; // HTML que crearemos a continuación
+        return "paciente/buscar_doctor";
     }
 
-    // PASO 2: Mostrar horarios disponibles del doctor seleccionado
+    // Mostrar horarios disponibles del doctor seleccionado
     @GetMapping("/horarios")
     public String verHorariosDisponibles(@RequestParam("doctorId") Long doctorId, Model model) {
-        // Buscamos solo los horarios DISPONIBLES de hoy en adelante
+        // Buscamos solo los horarios disponibles de hoy en adelante
         List<Horario> horariosLibres = horarioRepository
                 .findByDoctorIdAndEstadoAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(
                         doctorId, "DISPONIBLE", LocalDate.now());
@@ -81,7 +81,13 @@ public class PacienteReservaController {
         String emailPaciente = principal.getName();
         citaService.registrarCita(horarioId, emailPaciente);
 
-        // Redirigimos al inicio con un mensaje de éxito
+        // Redirigimos al inicio
         return "redirect:/paciente/reservar?reservaExito";
+    }
+
+
+    @GetMapping("/paciente/inicio")
+    public String inicioPaciente() {
+        return "paciente/inicio";
     }
 }

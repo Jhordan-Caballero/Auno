@@ -22,7 +22,7 @@ public class DoctorService {private final DoctorRepository doctorRepository;
 
     @Transactional
     public void registrarDoctor(DoctorDTO dto) {
-        // 1. Validaciones de duplicidad
+        // Validaciones de duplicidad
         if (doctorRepository.existsByNumeroColegiatura(dto.getNumeroColegiatura())) {
             throw new IllegalArgumentException("Ya existe un doctor registrado con ese número de colegiatura.");
         }
@@ -30,11 +30,11 @@ public class DoctorService {private final DoctorRepository doctorRepository;
             throw new IllegalArgumentException("El correo de contacto ya está asignado a otro doctor.");
         }
 
-        // 2. Buscar la especialidad. Si no existe, lanzamos error.
+        // Buscar la especialidad. Si no existe, lanzamos error.
         Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
                 .orElseThrow(() -> new IllegalArgumentException("La especialidad seleccionada no existe."));
 
-        // 3. Crear y mapear la entidad Doctor
+        // Crear y mapear la entidad Doctor
         Doctor doctor = new Doctor();
         doctor.setNombres(dto.getNombres());
         doctor.setApellidos(dto.getApellidos());
@@ -42,8 +42,8 @@ public class DoctorService {private final DoctorRepository doctorRepository;
         doctor.setDescripcion(dto.getDescripcion());
         doctor.setCorreoContacto(dto.getCorreoContacto());
         doctor.setTelefonoContacto(dto.getTelefonoContacto());
-        doctor.setEstado("ACTIVO"); // Todo doctor nace como ACTIVO
-        doctor.setEspecialidad(especialidad); // Vinculamos la relación
+        doctor.setEstado("Activo");
+        doctor.setEspecialidad(especialidad); // Vincular la relación
 
         // 4. Guardar
         doctorRepository.save(doctor);

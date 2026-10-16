@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity // <-- Si falta esto, sale el error "Not a managed type"
+@Entity
 @Table(name = "citas")
 public class Cita {
     @Id
@@ -21,7 +21,7 @@ public class Cita {
     private Long id;
 
     @Column(name = "fecha_reserva", nullable = false)
-    private LocalDateTime fechaReserva; // Fecha en la que el paciente hizo el clic de reservar
+    private LocalDateTime fechaReserva;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)
@@ -29,7 +29,7 @@ public class Cita {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
-    private Doctor doctor; // Añadido para facilitar las consultas de citas por doctor
+    private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "horario_id", nullable = false)
@@ -38,7 +38,6 @@ public class Cita {
     @Column(columnDefinition = "TEXT")
     private String motivo;
 
-    // Ej: "PENDIENTE", "CONFIRMADA", "CANCELADA", "ATENDIDA"
     @Column(nullable = false)
     private String estado;
 }

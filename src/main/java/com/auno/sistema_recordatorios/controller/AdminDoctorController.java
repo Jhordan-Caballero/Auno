@@ -34,7 +34,7 @@ public class AdminDoctorController {
         // Enviamos el DTO vacío para el formulario
         model.addAttribute("doctorDTO", new DoctorDTO());
 
-        return "admin/doctores"; // Renderizará la vista en templates/admin/doctores.html
+        return "admin/doctores"; // La vista en doctores.html
     }
 
     @PostMapping("/registro")

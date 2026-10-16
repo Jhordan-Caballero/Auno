@@ -2,37 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Historial de Citas</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #6f42c1; padding-bottom: 10px; color: #6f42c1; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #6f42c1; color: white; }
-        .btn-cancelar { background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .badge-pendiente { background-color: #ffc107; color: black; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; }
-        .badge-cancelada { background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; }
-        .nav-menu { margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .nav-menu a { text-decoration: none; color: #0056b3; font-weight: bold; }
-        .alert-success { background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Historial - Clínica Auno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-menu">
-        <a th:href="@{/paciente/reservar}">➕ Nueva Reserva</a>
-        <a th:href="@{/logout}" style="color: red;">🚪 Cerrar Sesión</a>
+<div class="navbar">
+    <div class="brand-container">
+        <img th:src="@{/imagenes/Logo_Auno.png}" alt="Logo Auno" class="logo-img" style="height: 100px;">
     </div>
+    <div class="nav-links">
+        <a th:href="@{/paciente/reservar}">Nueva Cita</a>
+        <a th:href="@{/paciente/mis-citas}" class="active">Historial</a>
+        <a th:href="@{/paciente/diagnosticos}">Mis Diagnósticos</a>
+        <a th:href="@{/logout}" class="logout">Cerrar Sesión</a>
+    </div>
+</div>
 
-    <h2>📋 Mi Historial Médico</h2>
+<div class="dashboard-container">
 
     <div th:if="${param.cancelada}" class="alert-success">
         Tu cita ha sido cancelada correctamente. El horario ha sido liberado.
     </div>
 
-    <table>
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0;">📋 Mi Historial Médico</h2>
+        <a th:href="@{/paciente/reservar}" class="btn-outline">➕ Nueva Reserva</a>
+    </div>
+
+    <table class="table-modern">
         <thead>
         <tr>
             <th>Fecha y Hora</th>
@@ -44,17 +44,16 @@
         </thead>
         <tbody>
         <tr th:each="cita : ${listaCitas}">
-            <!-- Mostrar fecha y hora concatenadas desde el Horario -->
             <td th:text="${cita.horario.fecha + ' (' + cita.horario.horaInicio + ')'}"></td>
-            <td th:text="${'Dr. ' + cita.doctor.nombres + ' ' + cita.doctor.apellidos}"></td>
+            <td style="font-weight: 500; color: var(--text-dark);" th:text="${'Dr. ' + cita.doctor.nombres + ' ' + cita.doctor.apellidos}"></td>
             <td th:text="${cita.doctor.especialidad.nombre}"></td>
             <td>
-                <span th:if="${cita.estado == 'PENDIENTE'}" class="badge-pendiente" th:text="${cita.estado}"></span>
-                <span th:if="${cita.estado == 'CANCELADA'}" class="badge-cancelada" th:text="${cita.estado}"></span>
-                <span th:if="${cita.estado != 'PENDIENTE' and cita.estado != 'CANCELADA'}" th:text="${cita.estado}"></span>
+                <span th:if="${cita.estado == 'PENDIENTE'}" class="badge bg-pendiente">Pendiente</span>
+                <span th:if="${cita.estado == 'CANCELADA'}" class="badge bg-cancelada">Cancelada</span>
+                <span th:if="${cita.estado == 'ATENDIDA'}" class="badge bg-atendida">Atendida</span>
+                <span th:if="${cita.estado == 'NO ASISTIÓ'}" class="badge bg-cancelada">No Asistió</span>
             </td>
             <td>
-                <!-- Mostrar botón de cancelar SOLO si la cita está pendiente -->
                 <form th:if="${cita.estado == 'PENDIENTE'}" th:action="@{/paciente/mis-citas/cancelar}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita?');">
                     <input type="hidden" name="citaId" th:value="${cita.id}">
                     <button type="submit" class="btn-cancelar">Cancelar</button>
@@ -62,7 +61,7 @@
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(listaCitas)}">
-            <td colspan="5" style="text-align: center;">No tienes citas registradas en tu historial.</td>
+            <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No tienes citas registradas en tu historial.</td>
         </tr>
         </tbody>
     </table>

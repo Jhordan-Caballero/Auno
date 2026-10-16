@@ -29,16 +29,16 @@ public class PacienteService {
 
     @Transactional
     public void registrarPaciente(RegistroPacienteDTO dto) {
-        // 1. Validar que el correo no esté en uso
+        // Validar que el correo no esté en uso
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("El correo ya está registrado en el sistema");
         }
 
-        // 2. Obtener el rol de paciente (si no existe, lo creamos dinámicamente para evitar errores)
+        // Obtener el rol de paciente
         Rol rolPaciente = rolRepository.findByNombre("ROLE_PATIENT")
                 .orElseGet(() -> rolRepository.save(new Rol("ROLE_PATIENT")));
 
-        // 3. Mapear datos al Usuario y encriptar contraseña
+        // Mapear datos al Usuario y encriptar contraseña
         Usuario usuario = new Usuario();
         usuario.setNombres(dto.getNombres());
         usuario.setApellidos(dto.getApellidos());
@@ -54,8 +54,7 @@ public class PacienteService {
         paciente.setDireccion(dto.getDireccion());
         paciente.setUsuario(usuario);
 
-        // 5. Guardar en base de datos.
-        // Como Paciente tiene CascadeType.ALL sobre Usuario, al guardar el paciente se inserta el usuario automáticamente.
+
         pacienteRepository.save(paciente);
 
         try {

@@ -26,7 +26,7 @@ public class AdminEspecialidadController {
     public String gestionarEspecialidades(Model model) {
         model.addAttribute("listaEspecialidades", especialidadService.listarTodas());
         model.addAttribute("especialidadDTO", new EspecialidadDTO());
-        return "admin/especialidades"; // Buscará el archivo en templates/admin/especialidades.html
+        return "admin/especialidades"; // Buscará el archivo en especialidades.html
     }
 
     @PostMapping("/registro")

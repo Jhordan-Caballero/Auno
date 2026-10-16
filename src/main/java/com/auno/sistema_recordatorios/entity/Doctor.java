@@ -17,7 +17,6 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Al quitarle la relación con Usuario, el Doctor necesita sus propios datos
     @Column(nullable = false)
     private String nombres;
 
@@ -36,7 +35,6 @@ public class Doctor {
     @Column(name = "telefono_contacto")
     private String telefonoContacto;
 
-    // Ej: "ACTIVO", "INACTIVO" (Para saber si puede recibir citas)
     @Column(nullable = false)
     private String estado;
 
@@ -44,5 +42,4 @@ public class Doctor {
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
 
-    // ELIMINADA la relación @OneToOne con Usuario.
 }

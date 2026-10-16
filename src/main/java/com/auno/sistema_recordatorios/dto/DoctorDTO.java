@@ -28,5 +28,5 @@ public class DoctorDTO {
     private String telefonoContacto;
 
     @NotNull(message = "Debe seleccionar una especialidad")
-    private Long especialidadId; // Recibiremos el ID desde el formulario HTML
+    private Long especialidadId;
 }

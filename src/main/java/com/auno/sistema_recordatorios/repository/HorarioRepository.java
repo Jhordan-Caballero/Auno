@@ -14,7 +14,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
     // Evita duplicar el mismo bloque de horario para un doctor
     boolean existsByDoctorIdAndFechaAndHoraInicio(Long doctorId, LocalDate fecha, LocalTime horaInicio);
 
-    // Nos servirá más adelante para que el paciente vea solo los horarios disponibles
+    // El paciente solo verá los horarios disponibles
     List<Horario> findByDoctorIdAndEstadoAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(
             Long doctorId, String estado, LocalDate fechaHoy);
 }

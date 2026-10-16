@@ -27,7 +27,7 @@ public class AuthController {
 
     @GetMapping("/registro")
     public String mostrarVistaRegistro(Model model) {
-        // Enviamos un DTO vacío a la vista para que Thymeleaf lo llene con el formulario
+        // DTO vacío a la vista para que Thymeleaf lo llene con el formulario
         model.addAttribute("pacienteDTO", new RegistroPacienteDTO());
         return "registro";
     }
@@ -37,26 +37,25 @@ public class AuthController {
                                     BindingResult result,
                                     Model model) {
 
-        // AGREGA ESTOS DOS LOGS
-        System.out.println("🚀 ¡EL BOTÓN FUNCIONA! El controlador recibió la petición POST.");
+        System.out.println(" Se recibió la petición POST.");
         System.out.println("Datos recibidos: " + dto.getEmail() + " - " + dto.getNombres());
 
         if (result.hasErrors()) {
-            System.out.println("❌ ERROR DE VALIDACIÓN DETECTADO:");
+            System.out.println("Error en la validación");
             result.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
             return "registro";
         }
 
         try {
-            System.out.println("⏳ Intentando guardar en la base de datos...");
+            System.out.println("Intentando guardar en la base de datos");
             pacienteService.registrarPaciente(dto);
-            System.out.println("✅ Guardado exitoso. Redirigiendo a login.");
+            System.out.println("Guardado exitoso.");
             return "redirect:/login?exito";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "registro";
-        } catch (Exception e) { // ATRAPA CUALQUIER OTRO ERROR DE BASE DE DATOS
-            System.out.println("💥 ERROR GRAVE AL GUARDAR: " + e.getMessage());
+        } catch (Exception e) { // Error al guardar
+            System.out.println("Error al guardar " + e.getMessage());
             e.printStackTrace();
             return "registro";
         }

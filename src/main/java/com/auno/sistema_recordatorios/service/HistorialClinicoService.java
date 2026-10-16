@@ -34,28 +34,25 @@ public class HistorialClinicoService {
                 .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
 
         // 2. Validar estados
-        if ("CANCELADA".equals(cita.getEstado())) {
+        if ("cancelada".equals(cita.getEstado())) {
             throw new IllegalStateException("No se puede registrar un historial para una cita cancelada.");
         }
-        if ("ATENDIDA".equals(cita.getEstado())) {
+        if ("atendida".equals(cita.getEstado())) {
             throw new IllegalStateException("Esta cita ya fue marcada como atendida.");
         }
 
-        // 3. Crear el Historial Clínico usando tu entidad
+        // Crear el Historial Clínico usando tu entidad
         Historial_Clinico historial = new Historial_Clinico();
         historial.setCita(cita);
         historial.setPaciente(cita.getPaciente());
-        // No seteamos el doctor porque está manejado a través de la Cita
         historial.setMotivoConsulta(dto.getMotivoConsulta());
         historial.setDiagnostico(dto.getDiagnostico());
-        historial.setRecomendaciones(dto.getRecomendaciones()); // Reemplaza a tratamiento
+        historial.setRecomendaciones(dto.getRecomendaciones());
         historial.setObservaciones(dto.getObservaciones());
-        historial.setFecha(LocalDate.now()); // Usa LocalDate y tu atributo 'fecha'
+        historial.setFecha(LocalDate.now());
 
-        // 4. Cambiar el estado de la cita a ATENDIDA
-        cita.setEstado("ATENDIDA");
+        cita.setEstado("atendida");
 
-        // 5. Guardar cambios
         citaRepository.save(cita);
         historialRepository.save(historial);
     }

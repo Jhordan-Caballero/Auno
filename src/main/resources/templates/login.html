@@ -2,56 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar Sesión - Sistema Médico</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 50px; }
-        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-        .alert-error { color: red; margin-bottom: 15px; }
-        .alert-success { color: green; margin-bottom: 15px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Clínica Auno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
 
-<div class="container">
-    <h2>Iniciar Sesión</h2>
+<div class="center-wrapper">
+    <!-- max-width más pequeño para el login -->
+    <div class="card-container" style="max-width: 450px;">
+        <h2 class="header-title">Iniciar Sesión</h2>
 
-    <!-- Mensaje de error de Spring Security -->
-    <div th:if="${param.error}" class="alert-error">
-        Correo o contraseña incorrectos.
-    </div>
-
-    <!-- Mensaje de éxito si se cerró sesión -->
-    <div th:if="${param.logout}" class="alert-success">
-        Has cerrado sesión correctamente.
-    </div>
-
-    <!-- Mensaje de éxito al registrarse -->
-    <div th:if="${param.exito}" class="alert-success">
-        ¡Registro exitoso! Ahora puedes iniciar sesión.
-    </div>
-
-    <form th:action="@{/login}" method="post">
-        <div class="form-group">
-            <label for="username">Correo Electrónico:</label>
-            <!-- Spring Security espera que el campo se llame 'username' por defecto -->
-            <input type="text" id="username" name="username" required autofocus>
+        <!-- Mensajes del sistema (usando las clases del CSS global) -->
+        <div th:if="${param.error}" class="alert-error">
+            Correo o contraseña incorrectos.
+        </div>
+        <div th:if="${param.logout}" class="alert-success">
+            Has cerrado sesión correctamente.
+        </div>
+        <div th:if="${param.exito}" class="alert-success">
+            ¡Registro exitoso! Ahora puedes iniciar sesión.
         </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required>
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label class="form-label" for="username">Correo Electrónico</label>
+                <input class="form-control" type="text" id="username" name="username" placeholder="correo@ejemplo.com" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Contraseña</label>
+                <input class="form-control" type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+
+            <button class="btn-primary" type="submit">Entrar a mi cuenta</button>
+        </form>
+
+        <div class="footer-link">
+            ¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a>
         </div>
-
-        <button type="submit">Entrar</button>
-    </form>
-
-    <p style="text-align: center; margin-top: 15px;">
-        ¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a>
-    </p>
+    </div>
 </div>
 
 </body>

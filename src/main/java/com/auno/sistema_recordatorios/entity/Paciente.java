@@ -20,8 +20,6 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Eliminamos el campo "nombre" de aquí porque ya está en la clase Usuario.
-
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "historiales_clinicos")
-public class Historial_Clinico { // Mejor sin guion bajo en el nombre de la clase
+public class Historial_Clinico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +29,7 @@ public class Historial_Clinico { // Mejor sin guion bajo en el nombre de la clas
     private String diagnostico;
 
     @Column(columnDefinition = "TEXT")
-    private String recomendaciones; // Cambiado de tratamiento a recomendaciones según tu UML
+    private String recomendaciones;
 
     @Column(columnDefinition = "TEXT")
     private String observaciones;
@@ -38,10 +38,9 @@ public class Historial_Clinico { // Mejor sin guion bajo en el nombre de la clas
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    // Relación 1 a 1 con Cita: Este historial nace a partir de una cita específica atendida
+    // Relación 1 a 1 con Cita
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cita_id", nullable = false, unique = true)
     private Cita cita;
 
-    // Eliminado el Doctor_id directo, porque ya sabemos qué doctor lo atendió a través de la Cita.
 }

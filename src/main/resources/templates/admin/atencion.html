@@ -2,65 +2,70 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Atención Médica</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #28a745; padding-bottom: 10px; color: #28a745; }
-        .info-paciente { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        textarea, input[type="text"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 4px; width: 100%; font-weight: bold; }
-        .error-text { color: red; font-size: 0.9em; }
-        .nav-menu { margin-bottom: 20px; }
-        .nav-menu a { text-decoration: none; color: #007bff; font-weight: bold; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Atención - Admin Auno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-menu">
-        <a th:href="@{/admin/citas}">⬅️ Cancelar y volver a la lista</a>
+<div class="navbar-admin">
+    <div class="brand">AUNO - Administración</div>
+    <div>
+        <a th:href="@{/admin/citas}" class="active">Control de Citas</a>
+        <a th:href="@{/admin/horarios}">Gestión de Horarios</a>
+        <a th:href="@{/admin/doctores}">Doctores</a>
+        <a th:href="@{/admin/especialidades}">Especialidades</a>
+        <a th:href="@{/logout}" class="logout">Cerrar Sesión</a>
+    </div>
+</div>
+
+<div class="dashboard-container container-md">
+
+    <a th:href="@{/admin/citas}" class="back-link">⬅️ Cancelar y volver a la lista</a>
+
+    <h2 class="page-header">🩺 Registrar Historial Clínico</h2>
+
+    <div class="info-card">
+        <div class="info-row">
+            <strong>Paciente:</strong> <span th:text="${cita.paciente.usuario.nombres + ' ' + cita.paciente.usuario.apellidos}"></span>
+        </div>
+        <div class="info-row">
+            <strong>Doctor Asignado:</strong> <span th:text="${'Dr. ' + cita.doctor.nombres + ' ' + cita.doctor.apellidos}"></span>
+        </div>
+        <div class="info-row">
+            <strong>Fecha de la Cita:</strong> <span th:text="${cita.horario.fecha}"></span>
+        </div>
     </div>
 
-    <h2>🩺 Registrar Historial Clínico</h2>
+    <form th:action="@{/admin/citas/atender}" th:object="${historialDTO}" method="POST" class="card-container" style="max-width: 100%; padding: 30px;" novalidate>
 
-    <div class="info-paciente">
-        <strong>Paciente:</strong> <span th:text="${cita.paciente.usuario.nombres + ' ' + cita.paciente.usuario.apellidos}"></span><br>
-        <strong>Doctor Asignado:</strong> <span th:text="${'Dr. ' + cita.doctor.nombres + ' ' + cita.doctor.apellidos}"></span><br>
-        <strong>Fecha de la Cita:</strong> <span th:text="${cita.horario.fecha}"></span>
-    </div>
-
-    <form th:action="@{/admin/citas/atender}" th:object="${historialDTO}" method="POST" novalidate>
-
-        <!-- ID de la cita oculto -->
         <input type="hidden" th:field="*{citaId}">
 
         <div class="form-group">
-            <label>Motivo de Consulta:</label>
-            <input type="text" th:field="*{motivoConsulta}" placeholder="Ej. Dolor de cabeza frecuente">
+            <label class="form-label">Motivo de Consulta:</label>
+            <input type="text" class="form-control" th:field="*{motivoConsulta}" placeholder="Ej. Dolor de cabeza frecuente">
             <span class="error-text" th:if="${#fields.hasErrors('motivoConsulta')}" th:errors="*{motivoConsulta}"></span>
         </div>
 
         <div class="form-group">
-            <label>Diagnóstico:</label>
-            <textarea th:field="*{diagnostico}" rows="3" placeholder="Detalle el diagnóstico médico..."></textarea>
+            <label class="form-label">Diagnóstico:</label>
+            <textarea class="form-control" th:field="*{diagnostico}" rows="3" placeholder="Detalle el diagnóstico médico..."></textarea>
             <span class="error-text" th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}"></span>
         </div>
 
         <div class="form-group">
-            <label>Recomendaciones (Tratamiento/Receta):</label>
-            <textarea th:field="*{recomendaciones}" rows="3" placeholder="Medicamentos, reposo, terapias..."></textarea>
+            <label class="form-label">Recomendaciones (Tratamiento/Receta):</label>
+            <textarea class="form-control" th:field="*{recomendaciones}" rows="3" placeholder="Medicamentos, reposo, terapias..."></textarea>
             <span class="error-text" th:if="${#fields.hasErrors('recomendaciones')}" th:errors="*{recomendaciones}"></span>
         </div>
 
         <div class="form-group">
-            <label>Observaciones Adicionales (Opcional):</label>
-            <textarea th:field="*{observaciones}" rows="2"></textarea>
+            <label class="form-label">Observaciones Adicionales <span class="text-opcional">(Opcional)</span>:</label>
+            <textarea class="form-control" th:field="*{observaciones}" rows="2"></textarea>
         </div>
 
-        <button type="submit">Guardar Historial y Finalizar Cita</button>
+        <button type="submit" class="btn-primary btn-dark">Guardar Historial y Finalizar Cita</button>
     </form>
 </div>
 

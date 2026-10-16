@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    // Spring crea automáticamente este método por el nombre:
+
     boolean existsByEmail(String email);
     Optional<Usuario> findByEmail(String email);
 }

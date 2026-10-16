@@ -13,22 +13,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 1. Ya NO necesitas inyectar el UserDetailsService en el constructor.
-    // 2. Ya NO necesitas crear el DaoAuthenticationProvider manualmente.
 
+   // Configuración de permisos
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/login", "/registro").permitAll()
+                        .requestMatchers("/inicio", "/login", "/registro", "/css/**", "/imagenes/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/paciente/**").hasAuthority("ROLE_PATIENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Clínica Auno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<!-- NAVBAR PÚBLICO -->
+<div class="navbar-public">
+    <a th:href="@{/}" class="brand-container">
+        <img th:src="@{/imagenes/Logo_Auno.png}" alt="Logo Auno" class="logo-img">
+        <span class="brand-text">AUNO</span>
+    </a>
+    <div class="nav-actions">
+        <a th:href="@{/registro}" class="btn-outline">Registrarse</a>
+        <a th:href="@{/login}" class="btn-solid">Mi Cuenta</a>
+    </div>
+</div>
+
+<!-- SECCIÓN: ¿POR QUÉ CONFIAR EN NOSOTROS? -->
+<section class="trust-section">
+    <div class="trust-header">
+        <h2>¿Buscas atención médica integral y de <span>confianza?</span></h2>
+        <p>Te brindamos nuestros principales pilares para cuidar de tu salud y la de tu familia.</p>
+    </div>
+
+    <div class="trust-content">
+        <!-- COLUMNA IZQUIERDA: IMAGEN DEL DOCTOR -->
+        <div class="trust-image">
+            <img th:src="@{/imagenes/doctor_inicio.jpg}" alt="Doctor Clínica Auno">
+        </div>
+
+        <!-- COLUMNA DERECHA: LOS 4 MOTIVOS -->
+        <div class="trust-reasons">
+            <div class="reason-box">
+                <h4>Profesionales de Excelencia</h4>
+                <p>Nuestro equipo médico está conformado por especialistas altamente capacitados, garantizando diagnósticos precisos y tratamientos efectivos.</p>
+            </div>
+            <div class="reason-box">
+                <h4>Atención Integral y Humana</h4>
+                <p>No solo tratamos síntomas, cuidamos personas. Brindamos un acompañamiento empático y cálido durante todo tu proceso de recuperación.</p>
+            </div>
+            <div class="reason-box">
+                <h4>Tecnología de Vanguardia</h4>
+                <p>Contamos con equipos médicos modernos e instalaciones diseñadas para ofrecerte procedimientos seguros y de alta calidad.</p>
+            </div>
+            <div class="reason-box">
+                <h4>Gestión Rápida y Sencilla</h4>
+                <p>Olvídate de las largas filas. Nuestra plataforma te permite gestionar tu historial y reservar tus citas desde la comodidad de tu hogar.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECCIÓN: LLAMADO A LA ACCIÓN -->
+<section class="cta-section">
+    <h2>Toda la atención que necesitas en <span>Clínica Auno</span></h2>
+    <a th:href="@{/login}" class="cta-btn">Agendar cita ahora</a>
+</section>
+
+</body>
+</html>

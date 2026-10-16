@@ -27,24 +27,24 @@ public class AdminAtencionController {
     // 1. Mostrar todas las citas al administrador
     @GetMapping
     public String listarCitas(Model model) {
-        // Obtenemos todas las citas de la base de datos
+        // Todas las citas de la base de datos
         List<Cita> listaCitas = citaRepository.findAll();
         model.addAttribute("listaCitas", listaCitas);
         return "admin/citas"; // Vista con la tabla
     }
 
-    // 2. Mostrar el formulario para atender a un paciente específico
+    //  Mostrar el formulario
     @GetMapping("/atender")
     public String mostrarFormularioAtencion(@RequestParam("citaId") Long citaId, Model model) {
         Cita cita = citaRepository.findById(citaId)
                 .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
 
         // Solo se pueden atender citas que estén pendientes
-        if (!"PENDIENTE".equals(cita.getEstado()) && !"PROGRAMADA".equals(cita.getEstado())) {
+        if (!"PENDIENTE".equals(cita.getEstado()) && !"Programada".equals(cita.getEstado())) {
             return "redirect:/admin/citas?error=Esta cita no está en un estado válido para ser atendida.";
         }
 
-        // Preparamos el DTO y le inyectamos el ID de la cita
+        // DTO del historial clinico y el ID de la cita
         HistorialClinicoDTO dto = new HistorialClinicoDTO();
         dto.setCitaId(cita.getId());
 
@@ -54,7 +54,7 @@ public class AdminAtencionController {
         return "admin/atencion"; // Vista del formulario clínico
     }
 
-    // 3. Procesar los datos y guardar el historial
+    // Procesar los datos y guardar el historial
     @PostMapping("/atender")
     public String registrarAtencion(@Valid @ModelAttribute("historialDTO") HistorialClinicoDTO dto,
                                     BindingResult result,

@@ -2,53 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Especialidades - Admin</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], textarea { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #007bff; color: white; }
-        .alert-success { background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        .alert-error { background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        .error-text { color: red; font-size: 0.9em; }
-        .nav-menu { margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .nav-menu a { text-decoration: none; color: #007bff; font-weight: bold; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Especialidades - Admin Auno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-menu">
-        <a th:href="@{/admin/doctores}">🩺 Ir a Gestión de Doctores</a>
-        <a th:href="@{/logout}" style="color: red;">🚪 Cerrar Sesión</a>
+<!-- Navbar Administrador -->
+<div class="navbar-admin">
+    <div class="brand">AUNO - Administración</div>
+    <div>
+        <a th:href="@{/admin/citas}">Control de Citas</a>
+        <a th:href="@{/admin/horarios}">Gestión de Horarios</a>
+        <a th:href="@{/admin/doctores}">Doctores</a>
+        <a th:href="@{/admin/especialidades}" class="active">Especialidades</a>
+        <a th:href="@{/logout}" class="logout">Cerrar Sesión</a>
     </div>
+</div>
 
-    <h2>Registrar Especialidad</h2>
+<div class="dashboard-container container-lg">
+
+    <h2 class="page-header">🩺 Registrar Especialidad</h2>
 
     <div th:if="${param.exito}" class="alert-success">¡Especialidad registrada exitosamente!</div>
     <div th:if="${error}" class="alert-error" th:text="${error}"></div>
 
-    <form th:action="@{/admin/especialidades/registro}" th:object="${especialidadDTO}" method="POST" novalidate>
+    <form th:action="@{/admin/especialidades/registro}" th:object="${especialidadDTO}" method="POST" class="card-container" style="max-width: 100%; padding: 30px; margin-bottom: 40px;" novalidate>
         <div class="form-group">
-            <label>Nombre de la Especialidad:</label>
-            <input type="text" th:field="*{nombre}" placeholder="Ej. Cardiología">
+            <label class="form-label">Nombre de la Especialidad:</label>
+            <input type="text" class="form-control" th:field="*{nombre}" placeholder="Ej. Cardiología">
             <span class="error-text" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
         </div>
         <div class="form-group">
-            <label>Descripción:</label>
-            <textarea th:field="*{descripcion}" rows="3" placeholder="Breve descripción..."></textarea>
+            <label class="form-label">Descripción <span class="text-opcional">(Opcional)</span>:</label>
+            <textarea class="form-control" th:field="*{descripcion}" rows="3" placeholder="Breve descripción del área médica..."></textarea>
         </div>
-        <button type="submit">Guardar Especialidad</button>
+        <button type="submit" class="btn-primary btn-dark" style="width: auto; padding: 12px 30px;">Guardar Especialidad</button>
     </form>
 
-    <h2 style="margin-top: 40px;">Lista de Especialidades</h2>
-    <table>
+    <h2 class="page-header">📋 Lista de Especialidades</h2>
+    <table class="table-modern">
         <thead>
         <tr>
             <th>ID</th>
@@ -58,12 +52,12 @@
         </thead>
         <tbody>
         <tr th:each="esp : ${listaEspecialidades}">
-            <td th:text="${esp.id}"></td>
-            <td th:text="${esp.nombre}"></td>
+            <td style="font-weight: 600;" th:text="${esp.id}"></td>
+            <td style="color: var(--text-dark); font-weight: 500;" th:text="${esp.nombre}"></td>
             <td th:text="${esp.descripcion}"></td>
         </tr>
         <tr th:if="${#lists.isEmpty(listaEspecialidades)}">
-            <td colspan="3" style="text-align: center;">No hay especialidades registradas en la base de datos.</td>
+            <td colspan="3" style="text-align: center; padding: 30px;">No hay especialidades registradas en la base de datos.</td>
         </tr>
         </tbody>
     </table>
