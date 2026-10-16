@@ -12,6 +12,7 @@ import java.security.Principal;
 @RequestMapping("/paciente/diagnosticos")
 public class PacienteHistorialController {
 
+
     private final HistorialClinicoService historialClinicoService;
 
     public PacienteHistorialController(HistorialClinicoService historialClinicoService) {
