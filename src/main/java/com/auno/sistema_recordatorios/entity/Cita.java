@@ -1,10 +1,9 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Future;
+import lombok.*;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -21,21 +20,26 @@ public class Cita {
     private Long id;
 
     @Column(name = "fecha_reserva", nullable = false)
+    @Future
     private LocalDateTime fechaReserva;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)
+    @NonNull
     private Paciente paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
+    @NonNull
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "horario_id", nullable = false)
+    @NonNull
     private Horario horario;
 
     @Column(columnDefinition = "TEXT")
+    @NonNull
     private String motivo;
 
     @Column(nullable = false)

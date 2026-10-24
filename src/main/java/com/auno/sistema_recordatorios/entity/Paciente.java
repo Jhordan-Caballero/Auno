@@ -1,10 +1,8 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Past;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -21,8 +19,11 @@ public class Paciente {
     private Long id;
 
     @Column(name = "fecha_nacimiento")
+    @Past
     private LocalDate fechaNacimiento;
 
+    @Column(name = "direccion")
+    @NonNull
     private String direccion;
 
     // Relación 1 a 1 con Usuario.

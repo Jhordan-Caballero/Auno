@@ -1,10 +1,9 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,17 +22,22 @@ public class Usuario {
     private Long id;
 
     @Column(nullable = false)
+    @NonNull
     private String nombres;
 
     @Column(nullable = false)
+    @NonNull
     private String apellidos;
 
     @Column(unique = true, nullable = false)
+    @Email
     private String email;
 
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Length(max=9)
     private String telefono;
 
     // Ej: "ACTIVO", "INACTIVO"

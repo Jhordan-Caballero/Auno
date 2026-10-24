@@ -1,10 +1,8 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Past;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -20,12 +18,15 @@ public class Historial_Clinico {
     private Long id;
 
     @Column(nullable = false)
+    @Past
     private LocalDate fecha;
 
     @Column(name = "motivo_consulta", columnDefinition = "TEXT")
+    @NonNull
     private String motivoConsulta;
 
     @Column(columnDefinition = "TEXT")
+    @NonNull
     private String diagnostico;
 
     @Column(columnDefinition = "TEXT")

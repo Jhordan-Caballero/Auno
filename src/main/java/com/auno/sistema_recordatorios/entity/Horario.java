@@ -1,10 +1,8 @@
 package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Future;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +19,7 @@ public class Horario {
     private Long id;
 
     @Column(nullable = false)
+    @Future
     private LocalDate fecha;
 
     @Column(name = "hora_inicio", nullable = false)
@@ -30,6 +29,7 @@ public class Horario {
     private LocalTime horaFin;
 
     @Column(nullable = false)
+    @NonNull
     private String estado;
 
     @ManyToOne(fetch = FetchType.LAZY)

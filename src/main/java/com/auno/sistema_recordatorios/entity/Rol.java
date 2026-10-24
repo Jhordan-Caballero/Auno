@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 
 @Setter
 @Getter
@@ -20,6 +21,7 @@ public class Rol {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NonNull
     private String nombre;
 
     public Rol(String nombre) {
