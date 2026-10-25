@@ -27,25 +27,25 @@ public class ApiDatosController {
         this.especialidadRepository = especialidadRepository;
     }
 
-    // Ruta: http://localhost:8080/api/usuarios
+    // Ruta: http://localhost:8081/api/usuarios
     @GetMapping("/usuarios")
     public List<Usuario> listarUsuariosJson() {
         return usuarioRepository.findAll();
     }
 
-    // Ruta: http://localhost:8080/api/doctores
+    // Ruta: http://localhost:8081/api/doctores
     @GetMapping("/doctores")
     public List<Doctor> listarDoctoresJson() {
         return doctorRepository.findAll();
     }
 
-    // Ruta: http://localhost:8080/api/pacientes
+    // Ruta: http://localhost:8081/api/pacientes
     @GetMapping("/pacientes")
     public List<Paciente> listarPacientesJson() {
         return pacienteRepository.findAll();
     }
 
-    // Ruta: http://localhost:8080/api/especialidades
+    // Ruta: http://localhost:8081/api/especialidades
     @GetMapping("/especialidades")
     public List<Especialidad> listarEspecialidadesJson() {
         return especialidadRepository.findAll();
