@@ -20,7 +20,7 @@ public class Cita {
     private Long id;
 
     @Column(name = "fecha_reserva", nullable = false)
-    @Future
+    @Future(message = "No puede elegir una fecha pasada")
     private LocalDateTime fechaReserva;
 
     @ManyToOne(fetch = FetchType.LAZY)

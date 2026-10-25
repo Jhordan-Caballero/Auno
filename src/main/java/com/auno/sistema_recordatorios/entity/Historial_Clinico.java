@@ -18,7 +18,7 @@ public class Historial_Clinico {
     private Long id;
 
     @Column(nullable = false)
-    @Past
+    @Past(message = "Solo pueden haber fecha pasadas a la cita ")
     private LocalDate fecha;
 
     @Column(name = "motivo_consulta", columnDefinition = "TEXT")

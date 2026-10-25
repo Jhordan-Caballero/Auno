@@ -19,13 +19,15 @@ public class Horario {
     private Long id;
 
     @Column(nullable = false)
-    @Future
+    @Future(message = "Debe poner una fecha válida")
     private LocalDate fecha;
 
     @Column(name = "hora_inicio", nullable = false)
+    @NonNull
     private LocalTime horaInicio;
 
     @Column(name = "hora_fin", nullable = false)
+    @NonNull
     private LocalTime horaFin;
 
     @Column(nullable = false)

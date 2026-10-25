@@ -29,7 +29,7 @@ public class Doctor {
     private String apellidos;
 
     @Column(name = "numero_colegiatura", unique = true)
-    @Length(min=5, max=6)
+    @Pattern(regexp = "^[0-9]{5}$", message = "El número de colegiatura debe tener 5 dígitos ")
     private String numeroColegiatura;
 
     @Column(columnDefinition = "TEXT")
@@ -37,12 +37,11 @@ public class Doctor {
     private String descripcion;
 
     @Column(name = "correo_contacto")
-    @Email
+    @Email(message = "Debe de poner un correo electrónico válido")
     private String correoContacto;
 
     @Column(name = "telefono_contacto")
-    @PositiveOrZero
-    @Length(min=9, max=9)
+    @Pattern(regexp = "^[0-9]{9}$", message = "Tiene que escribir un número válido")
     private String telefonoContacto;
 
     @Column(nullable = false)

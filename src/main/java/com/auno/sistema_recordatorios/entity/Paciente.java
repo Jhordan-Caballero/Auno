@@ -19,7 +19,7 @@ public class Paciente {
     private Long id;
 
     @Column(name = "fecha_nacimiento")
-    @Past
+    @Past(message = "debe de poner una fecha válida")
     private LocalDate fechaNacimiento;
 
     @Column(name = "direccion")
