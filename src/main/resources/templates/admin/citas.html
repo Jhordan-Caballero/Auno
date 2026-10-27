@@ -45,10 +45,12 @@
             <td th:text="${'Dr. ' + cita.doctor.nombres}"></td>
             <td th:text="${cita.horario.fecha + ' ' + cita.horario.horaInicio}"></td>
             <td>
-                <span th:classappend="${cita.estado == 'PENDIENTE' ? 'badge bg-pendiente' : (cita.estado == 'ATENDIDA' ? 'badge bg-atendida' : 'badge bg-cancelada')}" th:text="${cita.estado}"></span>
+
+                <span th:classappend="${#strings.equalsIgnoreCase(cita.estado, 'PENDIENTE') or #strings.equalsIgnoreCase(cita.estado, 'PROGRAMADA') ? 'badge bg-pendiente' : (#strings.equalsIgnoreCase(cita.estado, 'ATENDIDA') ? 'badge bg-atendida' : 'badge bg-cancelada')}" th:text="${cita.estado}"></span>
             </td>
             <td>
-                <a th:if="${cita.estado == 'PENDIENTE' or cita.estado == 'PROGRAMADA'}"
+
+                <a th:if="${#strings.equalsIgnoreCase(cita.estado, 'PENDIENTE') or #strings.equalsIgnoreCase(cita.estado, 'PROGRAMADA')}"
                    th:href="@{/admin/citas/atender(citaId=${cita.id})}"
                    class="btn-atender">🩺 Atender</a>
             </td>

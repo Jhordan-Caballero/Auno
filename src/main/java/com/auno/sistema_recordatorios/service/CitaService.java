@@ -33,7 +33,7 @@ public class CitaService {
         Horario horario = horarioRepository.findById(horarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Horario no encontrado"));
 
-        if (!"disponible".equals(horario.getEstado())) {
+        if (!"disponible".equalsIgnoreCase(horario.getEstado())) {
             throw new IllegalStateException("El horario ya no está disponible.");
         }
 
@@ -88,7 +88,7 @@ public class CitaService {
 
         // Liberar el horario para que otro paciente lo pueda tomar
         Horario horario = cita.getHorario();
-        horario.setEstado("disponible");
+        horario.setEstado("DISPONIBLE");
 
         //  Guardar los cambios
         horarioRepository.save(horario);

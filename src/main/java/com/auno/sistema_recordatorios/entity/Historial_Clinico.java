@@ -2,6 +2,7 @@ package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class Historial_Clinico {
     private Long id;
 
     @Column(nullable = false)
-    @Past(message = "Solo pueden haber fecha pasadas a la cita ")
+    @PastOrPresent(message = "Solo pueden haber fecha pasadas a la cita ")
     private LocalDate fecha;
 
     @Column(name = "motivo_consulta", columnDefinition = "TEXT")

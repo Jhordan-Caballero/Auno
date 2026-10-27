@@ -41,7 +41,7 @@ public class HorarioService {private final HorarioRepository horarioRepository;
         horario.setFecha(dto.getFecha());
         horario.setHoraInicio(dto.getHoraInicio());
         horario.setHoraFin(dto.getHoraFin());
-        horario.setEstado("disponible");
+        horario.setEstado("DISPONIBLE");
 
         horarioRepository.save(horario);
     }

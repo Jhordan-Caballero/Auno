@@ -2,6 +2,7 @@ package com.auno.sistema_recordatorios.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
 import org.jspecify.annotations.NonNull;
 
@@ -20,7 +21,6 @@ public class Cita {
     private Long id;
 
     @Column(name = "fecha_reserva", nullable = false)
-    @Future(message = "No puede elegir una fecha pasada")
     private LocalDateTime fechaReserva;
 
     @ManyToOne(fetch = FetchType.LAZY)
